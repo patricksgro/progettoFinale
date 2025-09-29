@@ -1,5 +1,5 @@
 import express from "express";
-import { createPost, deletePost, editPost, getAll } from "../controllers/posts.js";
+import { createPost, deletePost, editPost, getAll, getPost } from "../controllers/posts.js";
 import { validateObjectId } from "../middlewares/common/validateObjectId.js";
 import { sanitizeRequest } from "../middlewares/common/sanitizeRequest.js";
 import { validateRequest } from "../middlewares/common/validateRequest.js";
@@ -12,7 +12,7 @@ postRouter.get('/', getAll)
 
 postRouter.post('/', sanitizeRequest, validateRequest(createPostSchema), createPost)
 
-/*findPost ???  per get single post*/
+postRouter.get('/:id', validateObjectId, getPost)
 
 postRouter.put('/:id', validateObjectId, sanitizeRequest, validateRequest(updatePostSchema), editPost)
 
