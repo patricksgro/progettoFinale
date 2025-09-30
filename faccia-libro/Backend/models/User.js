@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import Post from "./Post.js";
+import bcrypt from 'bcrypt'
 
 const UserSchema = new Schema({
     name: {
@@ -58,6 +59,25 @@ UserSchema.pre('findOneAndDelete', async function (next) {
     }
     next();
 });
+
+UserSchema.pre('save', async function (next) {
+    if (!this.isModified('password')) {
+        return next()
+    }
+
+    try {
+        const salt = await bcrypt.genSalt(10)
+        this.password = await bcrypt.hash(this.password, salt);
+        next()
+
+    } catch (err) {
+        next(err)
+    }
+})
+
+UserSchema.methods.comparePassword = async function (password) {
+    return bcrypt.compare(password, this.password)
+}
 
 //prima definisco schema poi creo il modello
 const User = mongoose.model('User', UserSchema)

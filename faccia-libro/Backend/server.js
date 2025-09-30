@@ -6,6 +6,7 @@ import userRouter from "./routes/users.js";
 import { errorHandler } from "./middlewares/common/errorHandler.js";
 import postRouter from "./routes/posts.js";
 import commentRouter from "./routes/comments.js";
+import authRouter from "./routes/auth.js";
 
 
 const server = express()
@@ -13,6 +14,7 @@ const server = express()
 server.use(cors())
 server.use(express.json())
 
+server.use('/auth', authRouter)
 server.use('/users', userRouter)
 server.use('/posts', postRouter)
 server.use('/posts', commentRouter)
