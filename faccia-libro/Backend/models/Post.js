@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { CommentSchema } from "./Comment.js";
 
 
 export const PostSchema = new Schema({
@@ -28,7 +29,10 @@ export const PostSchema = new Schema({
     author: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }
+    },
+    comments: [
+        CommentSchema
+    ]
 }, { timestamps: true })
 
 const Post = mongoose.model('Post', PostSchema)

@@ -5,6 +5,7 @@ import { connectDB } from "./db.js";
 import userRouter from "./routes/users.js";
 import { errorHandler } from "./middlewares/common/errorHandler.js";
 import postRouter from "./routes/posts.js";
+import commentRouter from "./routes/comments.js";
 
 
 const server = express()
@@ -14,6 +15,7 @@ server.use(express.json())
 
 server.use('/users', userRouter)
 server.use('/posts', postRouter)
+server.use('/posts', commentRouter)
 
 server.use(errorHandler)
 
