@@ -1,5 +1,5 @@
 import express from "express"
-import { createUser, deleteUser, editUser, getAll, getUser } from "../controllers/users.js"
+import {  deleteUser, editUser, getAll, getUser } from "../controllers/users.js"
 import { validateObjectId } from "../middlewares/common/validateObjectId.js"
 import { validateRequest } from "../middlewares/common/validateRequest.js"
 import { createUserSchema, updateUserSchema } from "../validations/User.validation.js"
@@ -11,8 +11,6 @@ const userRouter = express.Router()
 
 
 userRouter.get('/', validateSearch('search'), getAll)
-
-userRouter.post('/', validateEmail, sanitizeRequest, validateRequest(createUserSchema), createUser)
 
 userRouter.get('/:id', validateObjectId, getUser)
 

@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { createUser } from "../controllers/users.js";
+
 
 export const createUserSchema = Joi.object({
     name: Joi.string()

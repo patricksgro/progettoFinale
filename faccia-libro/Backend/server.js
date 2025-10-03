@@ -7,6 +7,7 @@ import { errorHandler } from "./middlewares/common/errorHandler.js";
 import postRouter from "./routes/posts.js";
 import commentRouter from "./routes/comments.js";
 import authRouter from "./routes/auth.js";
+import { authVerify } from "./middlewares/common/authVerify.js";
 
 
 const server = express()
@@ -15,9 +16,9 @@ server.use(cors())
 server.use(express.json())
 
 server.use('/auth', authRouter)
-server.use('/users', userRouter)
-server.use('/posts', postRouter)
-server.use('/posts', commentRouter)
+server.use('/users', authVerify, userRouter)
+server.use('/posts', authVerify, postRouter)
+server.use('/posts', authVerify, commentRouter)
 
 server.use(errorHandler)
 

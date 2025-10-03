@@ -14,10 +14,11 @@ export async function getAll(req, res, next) {
 
 export async function createPost(req, res, next) {
     try {
-        let { cover, description, readTime, author } = req.body
+        let { cover, description, readTime } = req.body
+        let id = req.user._id
 
         const newPost = new Post({
-            cover, description, readTime, author
+            cover, description, readTime, author: id
         })
 
         const postSaved = await newPost.save()
@@ -46,6 +47,12 @@ export async function editPost(req, res, next) {
     try {
         const { id } = req.params
         let { cover, description, readTime } = req.body
+
+        //RIPARTI DA QUI
+        const post = await Post.findById(id)
+        if(req.user._id !== post.author) {
+            
+        }
 
         const editedPost = await Post.findByIdAndUpdate(id, {
             cover, description, readTime

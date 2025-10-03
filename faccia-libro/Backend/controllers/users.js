@@ -20,20 +20,6 @@ export async function getAll(req, res, next) {
     }
 }
 
-//questa deve essere messa come register route
-export async function createUser(req, res, next) {
-    try {
-        let { name, surname, dateOfBirth, bio, email, password } = req.body
-
-        const newUser = new User({ name, surname, dateOfBirth, bio, email, password })
-
-        const savedUser = await newUser.save()
-        return res.status(201).json(savedUser)
-    } catch (err) {
-        next(err)
-    }
-}
-
 export async function getUser(req, res, next) {
     try {
         const { id } = req.params
@@ -51,8 +37,10 @@ export async function getUser(req, res, next) {
 
 export async function editUser(req, res, next) {
     try {
-        const { id } = req.params
+        //l'id lo prendo direttamente da req.user che me lo passa il middlware authVerify
+        const id = req.user._id
         let { name, surname, dateOfBirth, bio, email, password } = req.body
+
 
         const updateUser = await User.findByIdAndUpdate(id, {
             name, surname, dateOfBirth, bio, email, password
@@ -71,13 +59,13 @@ export async function editUser(req, res, next) {
 
 export async function deleteUser(req, res, next) {
     try {
-        const { id } = req.params
+        const id = req.user._id
 
-        const deleteUser = await User.findByIdAndDelete(id)
-        if(!deleteUser) {
+        const deletedUser = await User.findByIdAndDelete(id)
+        if(!deletedUser) {
             return res.status(404).json({message: 'Autore non trovato'})
         }
-        return res.status(200).json(deleteUser)
+        return res.status(200).json(deletedUser)
     } catch (err) {
         next(err)
     }
