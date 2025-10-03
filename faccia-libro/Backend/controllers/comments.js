@@ -11,9 +11,9 @@ export async function getAll(req, res, next) {
 
 export async function createComment(req, res, next) {
     try {
-        const {text, author} = req.body
+        const {text} = req.body
 
-        const newComment = {text, author}
+        const newComment = {text, author: req.user._id}
         req.post.comments.push(newComment)
 
         await req.post.save()
@@ -37,7 +37,9 @@ export async function edit(req, res, next) {
             return res.status(404).json({message: 'Commento non trovato'})
         }
 
-        
+        if(!comment.author.equals(req.user._id)) {
+            return res.status(403).json({message: 'Non puoi modificare i commenti degli altri utenti'})
+        }
 
         //commmento ci da un oggetto, lo modifichiamo quindi con text destrutturato dal body
         comment.text = text
@@ -59,6 +61,10 @@ export async function remove(req, res, next) {
         const comment = req.post.comments.find(comment => comment._id == commentID)
         if(!comment) {
             return res.status(404).json({message: 'Commento non trovato'})
+        }
+
+        if(!comment.author.equals(req.user._id)) {
+            return res.status(403).json({message: 'Non puoi eliminare i commenti degli altri utenti'})
         }
 
        req.post.comments = req.post.comments.filter(comment => comment._id != commentID)

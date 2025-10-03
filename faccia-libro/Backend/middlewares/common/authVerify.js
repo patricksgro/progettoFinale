@@ -21,5 +21,6 @@ export async function authVerify(req, res, next) {
         next()
     } catch (err) {
         res.status(401).json({ message: 'token scaduto o non valido' })
+        console.log(err)
     }
 }
