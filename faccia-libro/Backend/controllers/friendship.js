@@ -125,12 +125,101 @@ export async function declineFriendRequest(req, res, next) {
 }
 
 
+export async function cancelFriendRequest(req, res, next) {
+    try {
+
+        const { recipientId } = req.params
+
+        if (!mongoose.Types.ObjectId.isValid(recipientId)) {
+            return res.status(400).json({ message: 'Id non valido' });
+        }
+
+        const requesterId = req.user.id
+
+        const friends = await Friendship.findOne({
+            requester: requesterId,
+            recipient: recipientId,
+            status: 'pending'
+        });
+
+        if (!friends) {
+            return res.status(404).json({ message: "Richiesta non trovata" });
+        }
+
+        //forse superfluo
+        if (friends.requester.toString() !== requesterId) {
+            return res.status(403).json({ message: 'Non autorizzato ad annullare questa richiesta' });
+        }
+
+        await friends.deleteOne()
+        res.status(200).json({ message: 'Richiesta di amicizia annullata' })
+
+    } catch (err) {
+        next(err)
+    }
+}
+
+
+export async function removeFriend(req, res, next) {
+    try {
+
+        const { id } = req.params
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: 'Id non valido' });
+        }
+
+        const requesterId = req.user.id
+
+        //da capire, superflua si, da capire se vale la pena lasciarla o meno
+        if (requesterId === id) {
+            return res.status(400).json({ message: 'Non puoi rimuovere te stesso dagli amici.' });
+        }
+
+        const friends = await Friendship.findOne({
+            $or: [
+                { requester: requesterId, recipient: id },
+                { requester: id, recipient: requesterId }
+            ],
+            status: 'accepted'
+        });
+
+        if (!friends) {
+            return res.status(404).json({ message: "Amicizia non trovata" });
+        }
+
+        await friends.deleteOne()
+        res.status(200).json({ message: 'Amicizia cancellata' })
+
+    } catch (err) {
+        next(err)
+    }
+}
+
+export async function getPendingRequests(req, res, next) {
+    try {
+
+        const userId = req.user.id
+
+        const friends = await Friendship.findOne({
+            recipient: userId,
+            status: "pending"
+        }).populate("requester", "name email")
+
+        res.status(200).json(friends)
+
+    } catch (err) {
+        next(err)
+    }
+}
+
+
 export async function getFriends(req, res, next) {
     try {
         //solo utente loggato vede solo i propri amici
         const userId = req.user.id;
 
-        //cerchiamo relazioni accepted in cui utente abbia accettato richiesta o abbiano accettato al sua richiesta, popoliamo con nome e email che serviranno nell frontend
+        //cerchiamo relazioni accepted in cui utente abbia accettato richiesta o abbiano accettato la sua richiesta, popoliamo con nome e email che serviranno nel frontend
         const friends = await Friendship.find({
             $or: [
                 { requester: userId, status: "accepted" },
