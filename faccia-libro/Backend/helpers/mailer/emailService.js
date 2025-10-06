@@ -1,22 +1,25 @@
-import { EmailParams, MailerSend, Recipient, Sender } from "mailersend";
+import Brevo from '@getbrevo/brevo'
 import 'dotenv/config'
 
+const brevo = new Brevo.TransactionalEmailsApi()
+brevo.authentications['apiKey'].apiKey = process.env.BREVO_API_KEY
 
-const emailSend = new MailerSend({
-    apiKey: process.env.MAILER_API_KEY
-})
+const sender = { name: 'PatrickApp', email: 'patricksgro02@gmail.com' }
 
-const sentFrom = new Sender('you@test-z0vklo6wo8vl7qrx.mlsender.net', 'PatrickApp')
 
 export async function sendOtpEmail(toEmail, otp) {
-    const recipients = [new Recipient(toEmail, 'Utente')]
+    const sendSmtpEmail = {
+        sender,
+        to: [{ email: toEmail, name: 'Utente' }],
+        subject: 'Il tuo codice OTP',
+        textContent: `Il tuo codice OTP è ${otp}, valido per 5 minuti.`
+    }
+    try {
 
-    const emailParams = new EmailParams()
-    .setFrom(sentFrom)
-    .setTo(recipients)
-    .setSubject('Il tuo codice OTP')
-    .setText(`Il tuo codice OTP è ${otp}, valido per 5 minuti`)
-    
+        await brevo.sendTransacEmail(sendSmtpEmail)
+        console.log('Email OTP inviata con successo!')
 
-    await emailSend.email.send(emailParams)
+    } catch(err) {
+        console.error('Errore durante l\'invio email:', err)
+    }
 }

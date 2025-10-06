@@ -31,6 +31,9 @@ const UserSchema = new Schema({
         required: true,
         match: [/^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,7}$/, 'Email non valida']
     },
+    googleID: {
+        type: String
+    },
     password: {
         type: String,
         minlength: 8,
@@ -46,7 +49,7 @@ UserSchema.virtual('posts', {
     justOne: false
 })
 
-//quando convert iin json o object includi i campi virtuali
+//quando convert in json o object includi i campi virtuali
 UserSchema.set('toObject', { virtuals: true })
 UserSchema.set('toJSON', { virtuals: true })
 
