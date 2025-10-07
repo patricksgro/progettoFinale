@@ -5,11 +5,13 @@ export const createPostSchema = Joi.object({
     cover: Joi.string()
         .uri()
         .trim()
+        .required()
         .pattern(/\.(jpg|jpeg|png|gif|webp|svg|mp4|avi|mov|mkv|webm)$/i)
         .messages({
             "string.uri": "La cover deve essere un URL valido",
             "string.pattern.base": "La cover deve avere un'estensione immagine o video valida",
-            "string.trim": "La cover non può contenere spazi all\'inizio o alla fine"
+            "string.trim": "La cover non può contenere spazi all\'inizio o alla fine",
+            "any.required": "La cover è obbligatoria"
         }),
     description: Joi.string()
         .trim()

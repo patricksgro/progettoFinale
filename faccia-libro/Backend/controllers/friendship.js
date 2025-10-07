@@ -146,11 +146,6 @@ export async function cancelFriendRequest(req, res, next) {
             return res.status(404).json({ message: "Richiesta non trovata" });
         }
 
-        //forse superfluo
-        if (friends.requester.toString() !== requesterId) {
-            return res.status(403).json({ message: 'Non autorizzato ad annullare questa richiesta' });
-        }
-
         await friends.deleteOne()
         res.status(200).json({ message: 'Richiesta di amicizia annullata' })
 
@@ -170,11 +165,6 @@ export async function removeFriend(req, res, next) {
         }
 
         const requesterId = req.user.id
-
-        //da capire, superflua si, da capire se vale la pena lasciarla o meno
-        if (requesterId === id) {
-            return res.status(400).json({ message: 'Non puoi rimuovere te stesso dagli amici.' });
-        }
 
         const friends = await Friendship.findOne({
             $or: [

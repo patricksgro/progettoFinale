@@ -69,6 +69,32 @@ export async function editPost(req, res, next) {
     }
 }
 
+
+export async function updateCover(req, res, next) {
+    try {
+        const filePath = req.file.path
+        const { id } = req.params
+        if (!req.file) {
+            return res.status(400).json({ message: 'Aggiungere un file' })
+        }
+
+        const post = await Post.findById(id)
+        if (!post.author.equals(req.user._id)) {
+            return res.status(403).json({ message: 'Non puoi modificare i post degli altri utenti' })
+        }
+
+        const updateCover = await Post.findByIdAndUpdate(id, { cover: filePath }, { new: true })
+        if (!updateCover) {
+            return res.status(404).json({ message: 'Post non trovato' })
+        }
+
+        res.status(200).json(updateCover)
+
+    } catch (err) {
+        next(err)
+    }
+}
+
 export async function deletePost(req, res, next) {
     try {
         const { id } = req.params

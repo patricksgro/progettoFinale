@@ -25,8 +25,8 @@ export async function getUser(req, res, next) {
         const { id } = req.params
 
         const user = await User.findById(id).populate('posts')
-        if(!user) {
-            return res.status(404).json({message: 'Autore non trovato'})
+        if (!user) {
+            return res.status(404).json({ message: 'Autore non trovato' })
         }
 
         return res.status(200).json(user)
@@ -46,11 +46,28 @@ export async function editUser(req, res, next) {
             name, surname, dateOfBirth, bio, email, password
         }, { new: true })
 
-        if(!updateUser) {
-            return res.status(404).json({message: 'Autore non trovato'})
+        if (!updateUser) {
+            return res.status(404).json({ message: 'Autore non trovato' })
         }
 
         return res.status(200).json(updateUser)
+
+    } catch (err) {
+        next(err)
+    }
+}
+
+export async function updateAvatar(req, res, next) {
+    try {
+        const filePath = req.file.path
+        const id  = req.user.id
+
+        const updateAvatar = await User.findByIdAndUpdate(id, { avatar: filePath }, { new: true }) 
+        if (!updateAvatar) {
+            return res.status(404).json({ message: 'Utente non trovato' })
+        }
+
+        res.status(200).json(updateAvatar)
 
     } catch (err) {
         next(err)
@@ -62,8 +79,8 @@ export async function deleteUser(req, res, next) {
         const id = req.user._id
 
         const deletedUser = await User.findByIdAndDelete(id)
-        if(!deletedUser) {
-            return res.status(404).json({message: 'Autore non trovato'})
+        if (!deletedUser) {
+            return res.status(404).json({ message: 'Autore non trovato' })
         }
         return res.status(200).json(deletedUser)
     } catch (err) {

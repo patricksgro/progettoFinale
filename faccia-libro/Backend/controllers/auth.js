@@ -108,7 +108,7 @@ export async function sendOtp(req, res, next) {
 //Registrazione
 export async function register(req, res, next) {
     try {
-        let { name, surname, dateOfBirth, bio, email, password, otp } = req.body
+        let { name, surname, dateOfBirth, bio, email, avatar, password, otp } = req.body
 
         const otpDoc = await Otp.findOne({ email, otp })
         if (!otpDoc || otpDoc.expiresAt < new Date()) {
@@ -120,7 +120,7 @@ export async function register(req, res, next) {
             return res.status(409).json({ message: "Email già presente" });
         }
 
-        const newUser = new User({ name, surname, dateOfBirth, bio, email, password })
+        const newUser = new User({ name, surname, dateOfBirth, bio, email, avatar, password })
 
         const findEmail = await User.findOne({ email })
         if (findEmail) {
