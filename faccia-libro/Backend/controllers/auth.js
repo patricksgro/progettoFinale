@@ -19,6 +19,20 @@ export async function login(req, res, next) {
             return res.status(400).json({ message: 'Email o password errati' });
         }
 
+        //verifica tentativi otp
+        const maxOtpPerDay = 10
+        const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000)
+        const otpCount = await Otp.countDocuments({
+            email,
+            createdAt: { $gte: twentyFourHoursAgo }
+        })
+
+        if (otpCount >= maxOtpPerDay) {
+            return res.status(429).json({
+                message: 'Hai raggiunto il numero massimo di OTP richiedibili nelle ultime 24 ore. Riprova più tardi.'
+            })
+        }
+
 
         //OTP
         const otp = generateOTP()

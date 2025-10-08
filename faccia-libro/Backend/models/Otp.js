@@ -17,7 +17,7 @@ export const otpSchema = new Schema({
         type: Boolean,
         default: false
     }
-})
+}, {timestamps: true})
 
 // TTL Index: cancella doc scaduti
 otpSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
