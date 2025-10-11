@@ -1,0 +1,23 @@
+.fields {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    padding: 4px;
+}
+
+.color-btn {
+    background-color: #85d4f3;
+    border: none;
+    border-radius: 15px;
+}
+
+.text-color {
+    color: #231e63;
+    font-weight: bold;
+}
+
+.link{
+    cursor: pointer;
+    text-decoration: underline;
+    color: blue;
+}

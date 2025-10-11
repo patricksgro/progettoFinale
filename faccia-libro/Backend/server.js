@@ -13,13 +13,21 @@ import passport from "passport";
 import googleStrategy from "./helpers/passportConfig.js";
 import friendshipRouter from "./routes/friendship.js";
 import { likeRouter } from "./routes/like.js";
+import messageRouter from "./routes/messages.js";
+import http, { Server } from 'http'
+import { Messages } from "./models/Messages.js";
+import { initSocket } from "./helpers/socket.js";
 
 
-const server = express()
+const app = express()
 
-server.use(cors())
-server.use(express.json())
-server.use(
+const server = http.createServer(app)
+
+initSocket(server)
+//rate-limit globale
+app.use(cors())
+app.use(express.json())
+app.use(
     helmet({
         contentSecurityPolicy: {
             directives: {
@@ -60,6 +68,7 @@ server.use(
                     "https://res.cloudinary.com",     // upload o fetch immagini
                     "https://accounts.google.com",    // login con Google
                     "https://apis.google.com",
+                    "http://localhost:5173",
                 ],
 
                 // Blocca completamente <object>, <embed>, ecc.
@@ -81,14 +90,15 @@ server.use(
 
 passport.use(googleStrategy)
 
-server.use('/auth', authRouter)
-server.use('/users', authVerify, userRouter)
-server.use('/posts', authVerify, postRouter)
-server.use('/posts', authVerify, commentRouter)
-server.use('/friends', authVerify, friendshipRouter)
-server.use('/likes', authVerify, likeRouter)
+app.use('/auth', authRouter)
+app.use('/users', authVerify, userRouter)
+app.use('/posts', authVerify, postRouter)
+app.use('/posts', authVerify, commentRouter)
+app.use('/friends', authVerify, friendshipRouter)
+app.use('/likes', authVerify, likeRouter)
+app.use('/messages', authVerify, messageRouter)
 
-server.use(errorHandler)
+app.use(errorHandler)
 
 connectDB()
 
