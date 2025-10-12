@@ -1,6 +1,14 @@
 import User from "../models/User.js"
 
 
+export async function getMe(req, res, next) {
+    try {
+        const user = await User.findById(req.user._id).populate('posts')
+        return res.status(200).json(user)
+    } catch (err) {
+        next(err)
+    }
+}
 
 
 export async function getAll(req, res, next) {
@@ -60,9 +68,9 @@ export async function editUser(req, res, next) {
 export async function updateAvatar(req, res, next) {
     try {
         const filePath = req.file.path
-        const id  = req.user.id
+        const id = req.user.id
 
-        const updateAvatar = await User.findByIdAndUpdate(id, { avatar: filePath }, { new: true }) 
+        const updateAvatar = await User.findByIdAndUpdate(id, { avatar: filePath }, { new: true })
         if (!updateAvatar) {
             return res.status(404).json({ message: 'Utente non trovato' })
         }

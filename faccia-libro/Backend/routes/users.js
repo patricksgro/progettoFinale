@@ -1,5 +1,5 @@
 import express from "express"
-import {  deleteUser, editUser, getAll, getUser, updateAvatar } from "../controllers/users.js"
+import {  deleteUser, editUser, getAll, getMe, getUser, updateAvatar } from "../controllers/users.js"
 import { validateObjectId } from "../middlewares/common/validateObjectId.js"
 import { validateRequest } from "../middlewares/common/validateRequest.js"
 import { createUserSchema, updateUserSchema } from "../validations/User.validation.js"
@@ -10,6 +10,7 @@ import uploadCloudinary from "../middlewares/common/uploadCloudinary.js"
 
 const userRouter = express.Router()
 
+userRouter.get('/me', getMe)
 
 userRouter.get('/', validateSearch('search'), getAll)
 

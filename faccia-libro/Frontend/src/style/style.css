@@ -6,15 +6,10 @@
 }
 
 .color-btn {
-    background-color: #85d4f3;
     border: none;
     border-radius: 15px;
 }
 
-.text-color {
-    color: #231e63;
-    font-weight: bold;
-}
 
 .link{
     cursor: pointer;

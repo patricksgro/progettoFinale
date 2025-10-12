@@ -9,7 +9,7 @@ import { otpLimiter } from '../middlewares/common/otpLimiter.js'
 
 const authRouter = express.Router()
 
-authRouter.post('/login', otpLimiter, sanitizeRequest, login)
+authRouter.post('/login', sanitizeRequest, login)
 authRouter.post('/verify-otp', verifyOTP)
 
 authRouter.post('/send-otp', otpLimiter, sendOtp)
