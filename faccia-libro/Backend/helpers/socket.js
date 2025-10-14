@@ -26,8 +26,7 @@ export const initSocket = (server) => {
         socket.disconnect();
       }
     });
-
-    // Inoltro messaggi 1-to-1 (senza salvare nel DB)
+    
     socket.on("send_message", ({ receiverId, message }) => {
       console.log(`Messaggio da ${socket.userId} a ${receiverId}: ${message}`);
       io.to(receiverId).emit("receive_message", {

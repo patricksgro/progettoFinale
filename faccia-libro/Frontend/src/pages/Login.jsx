@@ -1,8 +1,10 @@
 import { Button, Col, Container, Row } from 'react-bootstrap'
 import '../style/style.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Signup from './Signup'
 import { useAuthContext } from '../../context/authContext'
+import { useSearchParams } from 'react-router-dom'
+import FooterPages from '../components/FooterPages'
 
 function Login() {
 
@@ -14,6 +16,16 @@ function Login() {
     const googleLogin = () => {
         window.location.href = import.meta.env.VITE_BASEURL + import.meta.env.VITE_GOOGLE_PATH
     }
+
+    const [searchParams] = useSearchParams()
+
+
+    useEffect(() => {
+        const token = searchParams.get('jwt')
+        if (token) {
+            login(token)
+        }
+    }, [searchParams])
 
     const [datiFormCredentials, setDatiFormCredentials] = useState({
         email: '',
@@ -91,42 +103,44 @@ function Login() {
         <>
             {
                 !signupLogin ?
-                    < Container className="d-flex justify-content-center align-items-center vh-100" >
+                    < Container fluid className="bg-image d-flex justify-content-center align-items-center vh-100 text-white" >
                         <Row>
-                            <Col >
-                                <img src="public\pexels-ann-h-45017-15368261.png" alt="Idea" className="img-fluid" />
-                            </Col>
-
                             <Col >
                                 <div style={{ maxWidth: '108rem' }}>
                                     <div className="card-body">
-                                        <h5 className="card-title fs-1 my-4">Login</h5>
-                                        <p className="card-text text-body-secondary ">To keep connected with us please login with your personal information by email address and password</p>
+                                        <h5 className="card-title fs-1 my-4 fw-bold">Welcome to login system</h5>
+                                        <p className="card-text ">To keep connected with us please login with your personal information by email address and password</p>
                                         <div>
                                             {
                                                 !showOTP ?
                                                     <>
-                                                        <div>
-                                                            <i className="bi bi-envelope-at"></i>
-                                                            <input className='fields'
+                                                        <div className="input-wrapper">
+                                                            <i className="bi bi-person input-icon"></i>
+                                                            <input
+                                                                className="fields"
                                                                 type="email"
-                                                                name='email'
-                                                                placeholder="name@example.com"
+                                                                name="email"
+                                                                placeholder="Enter your email"
                                                                 value={datiFormCredentials.email}
-                                                                onChange={handleChange} />
+                                                                onChange={handleChange}
+                                                            />
                                                         </div>
-                                                        <div className='my-4'>
-                                                            <i className="bi bi-lock"></i>
-                                                            <input className='fields'
+
+                                                        <div className="input-wrapper my-4">
+                                                            <i className="bi bi-lock-fill input-icon"></i>
+                                                            <input
+                                                                className="fields"
                                                                 type="password"
-                                                                name='password'
+                                                                name="password"
+                                                                placeholder="Enter your password"
                                                                 value={datiFormCredentials.password}
-                                                                onChange={handleChange} />
+                                                                onChange={handleChange}
+                                                            />
                                                         </div>
                                                     </>
                                                     :
                                                     <>
-                                                        <div>
+                                                        <div className="input-wrapper">
                                                             <i className="bi bi-envelope-at"></i>
                                                             <input className='fields'
                                                                 type="email"
@@ -134,7 +148,7 @@ function Login() {
                                                                 value={datiFormOTP.email}
                                                                 onChange={handleChangeConfirm} />
                                                         </div>
-                                                        <div className='my-4'>
+                                                        <div className='my-4 input-wrapper'>
                                                             <i className="bi bi-person-check-fill"></i>
                                                             <input className='fields'
                                                                 type="number"
@@ -161,7 +175,7 @@ function Login() {
                                                 >Login</Button>
                                         }
 
-                                        <p className="card-text my-3"><small className="text-body-secondary">Or you can join with</small></p>
+                                        <p className="card-text my-3"><small>Or you can join with</small></p>
 
                                         <button
                                             style={{
@@ -171,7 +185,7 @@ function Login() {
                                                 padding: '8px 16px',
                                                 border: 'none',
                                                 borderRadius: '4px',
-                                                background: '#fff',
+                                                background: 'transparent',
                                                 cursor: 'pointer',
                                             }}
                                             onClick={googleLogin}
@@ -198,6 +212,11 @@ function Login() {
 
                                 </div>
                             </Col>
+
+                            <Col >
+
+                            </Col>
+                            <FooterPages />
                         </Row>
                     </Container >
                     :

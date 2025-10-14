@@ -4,7 +4,7 @@ import Post from "../models/Post.js"
 
 export async function getAll(req, res, next) {
     try {
-        const posts = await Post.find().populate('author')
+        const posts = await Post.find().populate('author', 'name surname avatar')
 
         res.status(200).json(posts)
     } catch (err) {

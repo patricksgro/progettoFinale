@@ -12,13 +12,13 @@ const authRouter = express.Router()
 authRouter.post('/login', sanitizeRequest, login)
 authRouter.post('/verify-otp', verifyOTP)
 
-authRouter.post('/send-otp', otpLimiter, sendOtp)
+authRouter.post('/send-otp', sendOtp)
 authRouter.post('/register', validateEmail, sanitizeRequest, validateRequest(createUserSchema), register)
 
 authRouter.get('/login-google', passport.authenticate('google', { scope: ['profile', 'email'] }))
 
 authRouter.get('/callback-google', passport.authenticate('google', { session: false }), (req, res, next) => {
-    res.redirect(process.env.FRONTEND_HOST + '/Home?jwt=' + req.user.jwt)
+    res.redirect(process.env.FRONTEND_HOST + '/login?jwt=' + req.user.jwt)
 })
 
 

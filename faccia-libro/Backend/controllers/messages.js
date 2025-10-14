@@ -21,12 +21,10 @@ export async function getMessagesWithUser(req, res, next) {
         //che si aid valido oblectId mongoose
         const userId = req.user.id
 
-        if (!id) {
-            return res.status(400).json({ message: "ID destinatario mancante" })
-        }
+        const user = await User.findById(id)
 
-        if (userId === id) {
-            return res.status(400).json({ message: 'Non ci sono messaggi da recuperare con te stesso' })
+        if (!user) {
+            return res.status(400).json({ message: " destinatario inesistente" })
         }
 
         const messages = await Messages.find({
@@ -34,7 +32,7 @@ export async function getMessagesWithUser(req, res, next) {
                 { senderId: userId, receiverId: id },
                 { senderId: id, receiverId: userId }
             ]
-        }).sort({createdAt: 1})
+        }).sort({ createdAt: 1 })
 
         res.status(200).json(messages)
     } catch (err) {
@@ -49,8 +47,10 @@ export async function sendMessage(req, res, next) {
         const { id: receiverId } = req.params
         const senderId = req.user.id
 
-        if (!receiverId) {
-            return res.status(400).json({ message: "ID destinatario mancante" })
+        const user = await User.findById(id)
+
+        if (!user) {
+            return res.status(400).json({ message: " destinatario inesistente" })
         }
 
         if (!text || !image) {

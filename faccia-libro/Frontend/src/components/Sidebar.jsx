@@ -1,8 +1,12 @@
 import { useState } from "react";
-import { Collapse, Button } from "react-bootstrap";
+import { useAuthContext } from "../../context/authContext"
+import { Card } from "react-bootstrap";
+import { Link } from "react-router-dom";
+
 
 
 function Sidebar() {
+    const {logout} = useAuthContext()
 
     const [collapsed, setCollapsed] = useState(false)
 
@@ -34,58 +38,54 @@ function Sidebar() {
             {/* MENU ITEMS */}
             <ul className="nav nav-pills flex-column mb-auto">
                 <li className="nav-item mb-2">
-                    <a href="#" className="nav-link text-dark d-flex align-items-center gap-3">
+                    <button className="nav-link text-dark d-flex align-items-center gap-3">
                         <i className="bi bi-house-door fs-5"></i>
                         {!collapsed && <span>Home</span>}
-                    </a>
+                    </button>
                 </li>
 
                 <li className="nav-item mb-2">
-                    <a href="#" className="nav-link text-dark d-flex align-items-center gap-3">
+                    <Card.Link to='/userProfile' as={Link} className="nav-link text-dark d-flex align-items-center gap-3">
                         <i className="bi bi-person fs-5"></i>
                         {!collapsed && <span>Profile</span>}
-                    </a>
+                    </Card.Link>
                 </li>
 
                 <hr />
 
-                {/* <h4 className="fw-bold text-center">
-                    Favourites
-                </h4> */}
-
                 <li className="nav-item mb-2">
-                    <a href="#" className="nav-link text-dark d-flex align-items-center gap-3">
+                    <button className="nav-link text-dark d-flex align-items-center gap-3">
                         <i className="bi bi-speedometer2 fs-5"></i>
                         {!collapsed && <span>Dashboard</span>}
-                    </a>
+                    </button>
                 </li>
 
                 <li className="nav-item mb-2">
-                    <a href="#" className="nav-link text-dark d-flex align-items-center gap-3">
+                    <button className="nav-link text-dark d-flex align-items-center gap-3">
                         <i className="bi bi-chat-dots fs-5"></i>
                         {!collapsed && <span>Messages</span>}
-                    </a>
+                    </button>
                 </li>
 
                 <li className="nav-item mb-2">
-                    <a href="#" className="nav-link text-dark d-flex align-items-center gap-3">
+                    <button className="nav-link text-dark d-flex align-items-center gap-3">
                         <i className="bi bi-bell fs-5"></i>
                         {!collapsed && <span>Notifications</span>}
-                    </a>
+                    </button>
                 </li>
 
                 <li className="nav-item mb-2">
-                    <a href="#" className="nav-link text-dark d-flex align-items-center gap-3">
+                    <button className="nav-link text-dark d-flex align-items-center gap-3">
                         <i className="bi bi-gear fs-5"></i>
                         {!collapsed && <span>Settings</span>}
-                    </a>
+                    </button>
                 </li>
 
                 <li className="nav-item mt-3 border-top pt-3">
-                    <a href="#" className="nav-link text-dark d-flex align-items-center gap-3">
+                    <button onClick={logout} className="nav-link text-dark d-flex align-items-center gap-3">
                         <i className="bi bi-box-arrow-right fs-5"></i>
                         {!collapsed && <span>Logout</span>}
-                    </a>
+                    </button>
                 </li>
             </ul>
 

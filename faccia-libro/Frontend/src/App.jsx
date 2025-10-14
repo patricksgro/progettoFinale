@@ -1,11 +1,11 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { AuthProvider } from "../context/authContext"
-import FooterPages from "./components/FooterPages"
 import Navigation from "./components/Navigation"
 import Login from "./pages/Login"
 import Signup from "./pages/Signup"
 import { ProtectedRoute } from "../components/ProtectedRoute"
 import Home from "./pages/Home"
+import UserProfile from "./pages/Userprofile"
 
 
 
@@ -29,8 +29,13 @@ function App() {
             </ProtectedRoute>
           } />
 
+          <Route path='/userProfile' element={
+            <ProtectedRoute>
+              <UserProfile />
+            </ProtectedRoute>
+          } />
+
         </Routes>
-        <FooterPages />
       </AuthProvider>
     </BrowserRouter>
   )
