@@ -68,7 +68,7 @@ export async function editUser(req, res, next) {
 export async function updateAvatar(req, res, next) {
     try {
         const filePath = req.file.path
-        const id = req.user.id
+        const id = req.user._id
 
         const updateAvatar = await User.findByIdAndUpdate(id, { avatar: filePath }, { new: true })
         if (!updateAvatar) {

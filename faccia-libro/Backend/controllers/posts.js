@@ -17,8 +17,10 @@ export async function createPost(req, res, next) {
         let { cover, description, readTime } = req.body
         let id = req.user._id
 
+        const coverUrl = req.file ? req.file.path : null
+
         const newPost = new Post({
-            cover, description, readTime, author: id
+            cover: coverUrl, description, readTime, author: id
         })
 
         const postSaved = await newPost.save()
@@ -32,7 +34,7 @@ export async function getPost(req, res, next) {
     try {
         const { id } = req.params
 
-        const post = await Post.findById(id)
+        const post = await Post.findById(id).populate('author', 'name surname avatar')
         if (!post) {
             return res.status(404).json({ message: 'Post non trovato' })
         }

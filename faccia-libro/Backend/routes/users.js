@@ -18,7 +18,7 @@ userRouter.get('/:id', validateObjectId, getUser)
 
 userRouter.put('/:id', validateObjectId, validateEmail, sanitizeRequest, validateRequest(updateUserSchema), editUser)
 
-userRouter.patch('/updateAvatar', validateRequest(updateUserSchema), uploadCloudinary.single('avatar',), updateAvatar)
+userRouter.patch('/updateAvatar', uploadCloudinary.single('avatar',), updateAvatar)
 
 userRouter.delete('/:id', validateObjectId, deleteUser)
 

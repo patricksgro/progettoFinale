@@ -6,6 +6,11 @@ import Signup from "./pages/Signup"
 import { ProtectedRoute } from "../components/ProtectedRoute"
 import Home from "./pages/Home"
 import UserProfile from "./pages/Userprofile"
+import ModalComment from "./components/ModalComment"
+import Posts from "./components/userProfile/Posts"
+import Friends from "./components/userProfile/Friends"
+import Galleries from "./components/userProfile/Galleries"
+import About from "./components/userProfile/About"
 
 
 
@@ -29,11 +34,22 @@ function App() {
             </ProtectedRoute>
           } />
 
-          <Route path='/userProfile' element={
-            <ProtectedRoute>
-              <UserProfile />
-            </ProtectedRoute>
-          } />
+          {/* rotta principale del profilo */}
+          <Route
+            path="/user/:id"
+            element={
+              <ProtectedRoute>
+                <UserProfile />
+              </ProtectedRoute>
+            }
+          >
+            {/* ✅ sottorotte nidificate */}
+            <Route index element={<Posts />} />
+            <Route path="posts" element={<Posts />} />
+            <Route path="friends" element={<Friends />} />
+            <Route path="galleries" element={<Galleries />} />
+            <Route path="about" element={<About />} />
+          </Route>
 
         </Routes>
       </AuthProvider>

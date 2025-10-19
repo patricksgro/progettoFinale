@@ -5,7 +5,6 @@ import { CommentSchema } from "./Comment.js";
 export const PostSchema = new Schema({
     cover: {
         type: String,
-        required: true,
         trim: true,
         match: [/\.(jpg|jpeg|png|gif|webp|svg|mp4|avi|mov|mkv|webm)$/i, 'URL non valida']
     },
@@ -17,12 +16,10 @@ export const PostSchema = new Schema({
     readTime: {
         value: {
             type: Number,
-            required: true,
             min: 1
         },
         unit: {
             type: String,
-            required: true,
             trim: true,
             enum: ['min', 'hour']
         }

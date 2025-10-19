@@ -11,7 +11,7 @@ const postRouter = express.Router()
 
 postRouter.get('/', getAll)
 
-postRouter.post('/', sanitizeRequest, validateRequest(createPostSchema), createPost)
+postRouter.post('/', sanitizeRequest, uploadCloudinary.single('cover'), validateRequest(createPostSchema), createPost)
 
 postRouter.get('/:id', validateObjectId, getPost)
 

@@ -31,6 +31,19 @@
   border-radius: 15px;
 }
 
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
 
 .link {
   cursor: pointer;
@@ -53,5 +66,29 @@
   background: url('https://images.pexels.com/photos/1287142/pexels-photo-1287142.jpeg');
   background-size: cover;
   background-repeat: no-repeat;
-  
+  border-bottom-right-radius: 25px;
+  border-bottom-left-radius: 25px;
+}
+
+.tabs a {
+  text-decoration: none;
+  /* Rimuove la sottolineatura */
+  color: inherit;
+  /* Mantiene il colore del testo originale */
+  font-weight: 500;
+  padding-bottom: 6px;
+  border-bottom: 3px solid transparent;
+  /* linea invisibile per allineamento */
+  transition: border-color 0.3s ease;
+}
+
+.tabs a:hover {
+  border-bottom: 3px solid #aaa;
+  /* leggera linea al passaggio */
+}
+
+.tabs a.active {
+  border-bottom: 3px solid #007bff;
+  /* linea blu sotto il link attivo */
+  color: #007bff;
 }
