@@ -1,5 +1,6 @@
 import express from "express";
 import { acceptFriendRequest, cancelFriendRequest, declineFriendRequest, getFriends, getPendingRequests, removeFriend, sendFriendRequest } from "../controllers/friendship.js";
+import { validateObjectId } from "../middlewares/common/validateObjectId.js";
 
 const friendshipRouter = express.Router()
 
@@ -15,6 +16,6 @@ friendshipRouter.patch('/remove/:id', removeFriend)
 
 friendshipRouter.get('/pendingRequests', getPendingRequests)
 
-friendshipRouter.get('/', getFriends)
+friendshipRouter.get('/:id', validateObjectId, getFriends)
 
 export default friendshipRouter

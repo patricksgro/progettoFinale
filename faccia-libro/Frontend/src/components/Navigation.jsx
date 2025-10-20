@@ -3,6 +3,7 @@ import { useAuthContext } from "../../context/authContext"
 import { useEffect, useState } from "react"
 import { getUsers } from "../../data/auth"
 import { Link } from "react-router-dom"
+import ViewFriendRequest from "./ViewFriendRequest"
 
 function Navigation() {
 
@@ -10,6 +11,7 @@ function Navigation() {
 
     const [search, setSearch] = useState('')
     const [user, setUser] = useState()
+
 
     useEffect(() => {
         if (!search) {
@@ -91,7 +93,9 @@ function Navigation() {
                             <img src="public/icons8-messages-50.png" alt="messages" width={'32px'} />
                         </div>
                         <div>
-                            <img src="public/icons8-bell-50.png" alt="notifications" width={'32px'} />
+                            {
+                                <ViewFriendRequest />
+                            }
                         </div>
                         <div className="d-flex align-items-center gap-2">
                             <span className="fw-semibold">{

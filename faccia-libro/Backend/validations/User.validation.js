@@ -61,7 +61,7 @@ export const createUserSchema = Joi.object({
         .message({
             "string.min": "La password deve avere almeno 8 caratteri",
         }),
-    otp: Joi.string().length(6).required()
+    // otp: Joi.string().length(6).required()
 })
 
 

@@ -51,11 +51,14 @@ function About() {
                                         <Col xs={12} className="mb-3">
                                             <div className="d-flex justify-content-between">
                                                 <h3 className="fw-bold mb-3">Personal info</h3>
-                                                <button
-                                                    onClick={handleOpenModalEditProfile}
-                                                    style={{ border: 'none', backgroundColor: 'transparent' }}>
-                                                    <HiOutlinePencilSquare />
-                                                </button>
+                                                {
+                                                    isOwner &&
+                                                    <button
+                                                        onClick={handleOpenModalEditProfile}
+                                                        style={{ border: 'none', backgroundColor: 'transparent' }}>
+                                                        <HiOutlinePencilSquare />
+                                                    </button>
+                                                }
                                             </div>
 
                                             <ul className="list-unstyled">

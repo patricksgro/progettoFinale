@@ -55,16 +55,24 @@ function ModalComment({ show, handleClose, post }) {
         try {
             const editedComment = await editComment(post._id, commentID, datiFormUpdate)
 
-            setComments((prev) =>
-                prev.map((c) => (c._id === update ? editedComment : c))
+            setComments(
+                comments.map((c) => {
+                    console.log(c)
+                    console.log(post)
+                    console.log(c._id === post._id)
+                    return c._id === post._id ? editedComment : c
+                })
             )
 
+            console.log(comments.map((c) => (c._id === post._id ? editedComment : c)))
             setUpdate(null)
             setDatiFormUpdate({ text: '' })
         } catch (err) {
             console.log(err)
         }
     }
+
+
 
     //DELETE COMMENT
     const remove = async (commentID) => {
@@ -105,7 +113,7 @@ function ModalComment({ show, handleClose, post }) {
                         })}
                     </Card.Text>
                 </div>
-                <div style={{marginLeft: '70%'}}>
+                <div style={{ marginLeft: '70%' }}>
                     {
                         post.author === loggeedUser._id &&
                         <PostOptionsSimple

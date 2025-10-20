@@ -1,8 +1,22 @@
 
 import { motion } from "framer-motion"
 import { Heart, Users, FileText } from "lucide-react"
+import { useEffect, useState } from "react"
+import { getFriends } from "../../data/friendship"
 
-function InfoUser({isOwner, currentUser, loggeedUser}) {
+function InfoUser({ isOwner, currentUser, loggeedUser, id }) {
+    
+    const [friends, setFriends] = useState()
+
+    useEffect(() => {
+        userFriends()
+    }, [id])
+
+    const userFriends = async () => {
+        const results = await getFriends(id)
+        setFriends(results)
+        console.log(results)
+    }
 
     return (
         <>
@@ -54,13 +68,13 @@ function InfoUser({isOwner, currentUser, loggeedUser}) {
                     >
                         <motion.div whileHover={{ scale: 1.1 }} className="text-center">
                             <Users size={22} className="text-indigo-500 mb-1" />
-                            {/* <p style={{ margin: 0, fontWeight: 600 }}>{loggeedUser.friendsCount || 215}</p> */}
+                            <p style={{ margin: 0, fontWeight: 600 }}>{friends && friends.length}</p>
                             <small className="text-muted">Friends</small>
                         </motion.div>
 
                         <motion.div whileHover={{ scale: 1.1 }} className="text-center">
                             <FileText size={22} className="text-indigo-500 mb-1" />
-                            <p style={{ margin: 0, fontWeight: 600 }}>{ isOwner ? loggeedUser.posts.length: currentUser.posts.length}</p>
+                            <p style={{ margin: 0, fontWeight: 600 }}>{isOwner ? loggeedUser.posts.length : currentUser.posts.length}</p>
                             <small className="text-muted">Posts</small>
                         </motion.div>
 
@@ -73,14 +87,34 @@ function InfoUser({isOwner, currentUser, loggeedUser}) {
 
                     {/* Bio */}
                     <div className="text-center px-4 mb-5" style={{ maxWidth: "700px", margin: "0 auto", lineHeight: "1.6" }}>
-                        {loggeedUser.bio === "" ? (
+                        {isOwner ? (
+                            loggeedUser.bio === "" ? (
+                                <motion.h5
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ delay: 0.2 }}
+                                    className="fst-italic text-secondary"
+                                >
+                                    Scrivi qualcosa su di te...
+                                </motion.h5>
+                            ) : (
+                                <motion.p
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ delay: 0.2 }}
+                                    style={{ color: "#334155", fontSize: "1.1rem" }}
+                                >
+                                    {loggeedUser.bio}
+                                </motion.p>
+                            )
+                        ) : currentUser.bio === "" ? (
                             <motion.h5
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.2 }}
                                 className="fst-italic text-secondary"
                             >
-                                Scrivi qualcosa su di te...
+                                Nessuna bio
                             </motion.h5>
                         ) : (
                             <motion.p
@@ -89,7 +123,7 @@ function InfoUser({isOwner, currentUser, loggeedUser}) {
                                 transition={{ delay: 0.2 }}
                                 style={{ color: "#334155", fontSize: "1.1rem" }}
                             >
-                                {isOwner ? loggeedUser.bio: currentUser.bio}
+                                {currentUser.bio}
                             </motion.p>
                         )}
                     </div>

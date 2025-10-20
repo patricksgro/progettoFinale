@@ -9,7 +9,7 @@ import { useOutletContext } from "react-router-dom"
 
 function Posts() {
 
-    const { currentUser } = useOutletContext()
+    const { currentUser, isOwner } = useOutletContext()
 
     const [showModal, setShowModal] = useState(false)
     const [selectedPost, setSelectedPost] = useState(null)
@@ -128,7 +128,7 @@ function Posts() {
                                         💬 <small>Comments</small>
                                     </div>
                                     {
-                                        post.author === currentUser._id &&
+                                        isOwner &&
                                         <PostOptionsSimple
                                             post={post}
                                         />

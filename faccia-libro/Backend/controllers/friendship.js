@@ -194,7 +194,7 @@ export async function getPendingRequests(req, res, next) {
         const friends = await Friendship.findOne({
             recipient: userId,
             status: "pending"
-        }).populate("requester", "name email")
+        }).populate("requester", "name surname avatar")
 
         res.status(200).json(friends)
 
@@ -206,14 +206,14 @@ export async function getPendingRequests(req, res, next) {
 
 export async function getFriends(req, res, next) {
     try {
-        //solo utente loggato vede solo i propri amici
-        const userId = req.user.id;
+        
+        const id = req.params.id
 
         //cerchiamo relazioni accepted in cui utente abbia accettato richiesta o abbiano accettato la sua richiesta, popoliamo con nome e email che serviranno nel frontend
         const friends = await Friendship.find({
             $or: [
-                { requester: userId, status: "accepted" },
-                { recipient: userId, status: "accepted" }
+                { requester: id, status: "accepted" },
+                { recipient: id, status: "accepted" }
             ]
         }).populate("requester recipient", "name email");
 
