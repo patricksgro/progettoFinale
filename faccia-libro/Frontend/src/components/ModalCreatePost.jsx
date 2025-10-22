@@ -7,6 +7,7 @@ import { createPost } from '../../data/post';
 function ModalCreatePost({ show, handleClose, userData }) {
 
     const [cover, setCover] = useState(null)
+    const [stateDescription, setStateDescription] = useState(false)
 
     const [datiForm, setDatiForm] = useState({
         description: ''
@@ -24,6 +25,10 @@ function ModalCreatePost({ show, handleClose, userData }) {
     }
 
     const handleSubmit = async () => {
+        if (datiForm.description.trim() === '') {
+            setStateDescription(true)
+            return
+        }
 
         const formData = new FormData()
         formData.append('description', datiForm.description)
@@ -34,6 +39,10 @@ function ModalCreatePost({ show, handleClose, userData }) {
 
         const result = await createPost(formData)
         console.log(result)
+
+        handleClose()
+        setDatiForm({ description: '' })
+        setCover(null)
     }
 
     return (
@@ -94,6 +103,10 @@ function ModalCreatePost({ show, handleClose, userData }) {
                     />
                 </div>
 
+                {
+                    stateDescription && <p className='text-danger mt-3'>Description is required</p>
+                }
+
                 {/* Divider */}
                 <hr style={{ borderColor: "#e2e8f0", margin: "20px 0 15px 0" }} />
 
@@ -125,8 +138,7 @@ function ModalCreatePost({ show, handleClose, userData }) {
                     Chiudi
                 </Button>
                 <Button onClick={() => {
-                    handleSubmit();
-                    handleClose()
+                    handleSubmit()
                 }} variant="primary">
                     Pubblica
                 </Button>

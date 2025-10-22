@@ -90,7 +90,7 @@ function Navigation() {
                     !showFullNav &&
                     <div className="d-flex align-items-center gap-4">
                         <div>
-                            <img src="public/icons8-messages-50.png" alt="messages" width={'32px'} />
+                            <img src="/public/icons8-messages-50.png" alt="messages" width={'30px'} style={{cursor: 'pointer'}} />
                         </div>
                         <div>
                             {

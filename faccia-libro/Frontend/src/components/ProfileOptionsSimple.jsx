@@ -1,13 +1,25 @@
 import { useState } from "react"
+import { deleteUSer } from "../../data/auth"
+import { useAuthContext } from "../../context/authContext"
+import { useNavigate } from "react-router-dom"
 
 function ProfileOptionsSimple() {
 
+    const {loggeedUser, logout} = useAuthContext()
+    const navigate = useNavigate()
+
     const [open, setOpen] = useState(false)
+
+    const removeUser = async () => {
+        await deleteUSer(loggeedUser._id)
+        navigate('/login')
+        logout()
+    }
 
     return (
         <div style={{ position: "relative", display: "inline-block" }}>
             <img
-                src="public/icons8-menu-48.png"
+                src="/public/icons8-menu-48.png"
                 alt="options"
                 width={25}
                 style={{ cursor: "pointer" }}
@@ -29,6 +41,7 @@ function ProfileOptionsSimple() {
                 >
                     <div
                         style={{ padding: "8px 12px", cursor: "pointer" }}
+                        onClick={removeUser}
                     >
                         Delete Profile
                     </div>

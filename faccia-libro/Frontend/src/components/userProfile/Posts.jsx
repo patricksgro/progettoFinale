@@ -1,10 +1,10 @@
 import { Col, Row } from "react-bootstrap"
 import { useAuthContext } from "../../../context/authContext"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import ModalComment from "../ModalComment"
 import PostOptionsSimple from "../PostOptionSimple"
-import { dislikePost, likePost } from "../../../data/like"
+import { dislikePost, getlikesPost, likePost } from "../../../data/like"
 import { useOutletContext } from "react-router-dom"
 
 function Posts() {
@@ -14,6 +14,7 @@ function Posts() {
     const [showModal, setShowModal] = useState(false)
     const [selectedPost, setSelectedPost] = useState(null)
     const [unlike, setUnLike] = useState({})
+    const [likesCount, setLikesCount] = useState({}) // ✅ aggiunto stato per i like
 
     const handleOpenModal = (post) => {
         setSelectedPost(post)
@@ -25,13 +26,32 @@ function Posts() {
         setShowModal(false)
     }
 
-
+    // ✅ recupera numero like di ogni post
+    useEffect(() => {
+        if (currentUser && currentUser.posts.length > 0) {
+            currentUser.posts.forEach(async (post) => {
+                const likes = await getlikesPost(post._id)
+                setLikesCount(prev => ({
+                    ...prev,
+                    [post._id]: likes.length
+                }))
+            })
+        }
+    }, [currentUser])
 
     const handleLikeToggle = async (postID) => {
         if (unlike[postID]) {
             await dislikePost(postID);
+            setLikesCount(prev => ({
+                ...prev,
+                [postID]: (prev[postID] || 1) - 1
+            }))
         } else {
             await likePost(postID);
+            setLikesCount(prev => ({
+                ...prev,
+                [postID]: (prev[postID] || 0) + 1
+            }))
         }
 
         setUnLike(prev => ({
@@ -117,12 +137,13 @@ function Posts() {
                                 <div className="d-flex justify-content-between align-items-center mt-4 text-muted" >
                                     <div className="d-flex align-items-center gap-3" onClick={() => handleLikeToggle(post._id)} style={{ cursor: "pointer" }}>
                                         <motion.img
-                                            src={!unlike[post._id] ? "public/icons8-like-32.png" : "public/icons8-like-48.png"}
+                                            src={!unlike[post._id] ? "/public/icons8-like-32.png" : "/public/icons8-like-48.png"}
                                             alt="like"
                                             width="32px"
                                             whileTap={{ scale: 1.4 }}
                                         />
-                                        <span>{post.likes || 0}</span>
+                                        {/* ✅ mostra numero like aggiornato */}
+                                        <span>{likesCount[post._id] || 0}</span>
                                     </div>
                                     <div style={{ cursor: "pointer" }} onClick={() => handleOpenModal(post)}>
                                         💬 <small>Comments</small>

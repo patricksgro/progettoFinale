@@ -1,7 +1,6 @@
 import { Card, Container, Row, Col } from "react-bootstrap"
 import { motion } from "framer-motion"
 import { Mail, Calendar, User } from "lucide-react"
-import { useAuthContext } from "../../../context/authContext"
 import { HiOutlinePencilSquare } from 'react-icons/hi2';
 import { useState } from "react";
 import ModalEditProfile from '../../components/ModalEditProfile'
@@ -38,8 +37,8 @@ function About() {
                                         src={currentUser.avatar}
                                         alt={currentUser.name}
                                         className="rounded-circle shadow-sm"
-                                        width={150}
-                                        height={150}
+                                        width={180}
+                                        height={180}
                                         whileHover={{ scale: 1.05 }}
                                     />
                                     <h3 className="mt-3 mb-0">{currentUser.name} {currentUser.surname}</h3>

@@ -69,6 +69,7 @@ export async function updateAvatar(req, res, next) {
     try {
         const filePath = req.file.path
         const id = req.user._id
+        if (!req.file) return res.status(400).json({ message: 'Nessun file caricato' })
 
         const updateAvatar = await User.findByIdAndUpdate(id, { avatar: filePath }, { new: true })
         if (!updateAvatar) {

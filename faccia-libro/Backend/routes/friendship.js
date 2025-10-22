@@ -1,5 +1,5 @@
 import express from "express";
-import { acceptFriendRequest, cancelFriendRequest, declineFriendRequest, getFriends, getPendingRequests, removeFriend, sendFriendRequest } from "../controllers/friendship.js";
+import { acceptFriendRequest, cancelFriendRequest, declineFriendRequest, getFriends,  getPendingRequests, removeFriend, sendFriendRequest } from "../controllers/friendship.js";
 import { validateObjectId } from "../middlewares/common/validateObjectId.js";
 
 const friendshipRouter = express.Router()

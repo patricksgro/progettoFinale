@@ -12,26 +12,24 @@ export const initSocket = (server) => {
   });
 
   io.on("connection", (socket) => {
-    console.log("🔌 Nuovo utente connesso:", socket.id);
+    try {
+      const token = socket.handshake.auth.token;
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      socket.userId = decoded.id;
+      socket.join(decoded.id);
+      console.log(`🔌 Utente ${decoded.id} autenticato e connesso`);
+    } catch {
+      socket.emit("unauthorized");
+      socket.disconnect();
+      return;
+    }
 
-    // Autenticazione socket tramite token JWT
-    socket.on("authenticate", (token) => {
-      try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        socket.userId = decoded.id;
-        socket.join(decoded.id);
-        console.log(`Utente ${decoded.id} autenticato e unito alla propria stanza`);
-      } catch {
-        socket.emit("unauthorized");
-        socket.disconnect();
-      }
-    });
-    
     socket.on("send_message", ({ receiverId, message }) => {
       console.log(`Messaggio da ${socket.userId} a ${receiverId}: ${message}`);
       io.to(receiverId).emit("receive_message", {
         senderId: socket.userId,
-        text: message,
+        receiverId,
+        message,
       });
     });
 

@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react"
-import { getPendingRequests } from "../../data/friendship"
+import { acceptRequest, declineRequest, getPendingRequests } from "../../data/friendship"
+import { Button } from 'react-bootstrap'
+import { Bell } from "lucide-react";
+
 
 function ViewFriendRequest() {
 
@@ -14,6 +17,20 @@ function ViewFriendRequest() {
         const results = await getPendingRequests()
         setSender(results)
         console.log(results)
+    }
+
+    //ACCETTA RICHIESTA
+
+    const acceptFriendRequest = async () => {
+        const accepted = await acceptRequest(sender.requester._id)
+        setSender(null)
+    }
+
+    //RIFIUTARE RICHIESTA
+
+    const declineFriendRequest = async () => {
+        const accepted = await declineRequest(sender.requester._id)
+        setSender(null)
     }
 
     return (
@@ -31,23 +48,21 @@ function ViewFriendRequest() {
                 onMouseEnter={(e) => (e.currentTarget.style.background = "#f1f5f9")}
                 onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
             >
-                <img
-                    src="public/icons8-bell-50.png"
-                    alt="notifications"
-                    width={25}
-                />
+                <Bell size={24} />
                 {/* 🔴 Puntino notifica */}
-                <span
-                    style={{
-                        position: "absolute",
-                        top: "4px",
-                        right: "4px",
-                        width: "8px",
-                        height: "8px",
-                        background: "#ef4444",
-                        borderRadius: "50%",
-                    }}
-                ></span>
+                {sender && (
+                    <span
+                        style={{
+                            position: "absolute",
+                            top: "4px",
+                            right: "4px",
+                            width: "8px",
+                            height: "8px",
+                            background: "#ef4444",
+                            borderRadius: "50%",
+                        }}
+                    ></span>
+                )}
             </div>
 
             {open && (
@@ -63,6 +78,7 @@ function ViewFriendRequest() {
                         width: "320px",
                         overflow: "hidden",
                         animation: "fadeIn 0.2s ease",
+                        zIndex: 9999
                     }}
                 >
                     {/* 🔹 Header tendina */}
@@ -99,6 +115,8 @@ function ViewFriendRequest() {
                                 style={{
                                     transition: "background 0.2s ease",
                                     cursor: "pointer",
+                                    flexDirection: "column",
+                                    alignItems: "flex-start",
                                 }}
                                 onMouseEnter={(e) => (e.currentTarget.style.background = "#f8fafc")}
                                 onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
@@ -137,6 +155,22 @@ function ViewFriendRequest() {
                                             Ti ha inviato una richiesta
                                         </p>
                                     </div>
+                                </div>
+
+                                {/* 🔘 Pulsanti Azione */}
+                                <div style={{ display: "flex", gap: "8px", marginTop: "10px" }}>
+                                    <Button
+                                        onClick={acceptFriendRequest}
+                                    >
+                                        Accetta
+                                    </Button>
+
+                                    <Button
+                                        variant="secondary"
+                                        onClick={declineFriendRequest}
+                                    >
+                                        Rifiuta
+                                    </Button>
                                 </div>
                             </div>
                         ) : (

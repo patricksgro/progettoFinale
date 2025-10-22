@@ -206,7 +206,7 @@ export async function getPendingRequests(req, res, next) {
 
 export async function getFriends(req, res, next) {
     try {
-        
+
         const id = req.params.id
 
         //cerchiamo relazioni accepted in cui utente abbia accettato richiesta o abbiano accettato la sua richiesta, popoliamo con nome e email che serviranno nel frontend

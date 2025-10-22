@@ -20,7 +20,7 @@ export async function sendRequest(recipientId) {
 
 export async function cancelFriendRequest(recipientId) {
     try {
-        const response = await axios.patch(`/friends/cancel/${recipientId}`, )
+        const response = await axios.patch(`/friends/cancel/${recipientId}`,)
         return response.data
     } catch (err) {
         console.log(err)
@@ -29,7 +29,25 @@ export async function cancelFriendRequest(recipientId) {
 
 export async function getPendingRequests() {
     try {
-        const response = await axios.get(`/friends/pendingRequests`, )
+        const response = await axios.get(`/friends/pendingRequests`,)
+        return response.data
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+export async function acceptRequest(requesterId) {
+    try {
+        const response = await axios.patch(`/friends/accept/${requesterId}`,)
+        return response.data
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+export async function declineRequest(requesterId) {
+    try {
+        const response = await axios.patch(`/friends/decline/${requesterId}`,)
         return response.data
     } catch (err) {
         console.log(err)

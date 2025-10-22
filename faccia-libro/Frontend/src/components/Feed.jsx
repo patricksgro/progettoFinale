@@ -6,6 +6,7 @@ import { dislikePost, getlikesPost, likePost } from '../../data/like';
 import { motion } from "framer-motion"
 import { useAuthContext } from '../../context/authContext';
 import ModalCreatePost from './ModalCreatePost';
+import { Link } from 'react-router-dom';
 
 function Feed() {
 
@@ -16,11 +17,19 @@ function Feed() {
     const [modalCreatePost, setModalCreatePost] = useState(false)
     const [selectedPost, setSelectedPost] = useState(null)
     const [usersPost, setUsersPost] = useState(null)
-    const [allLikes, setAllLikes] = useState([])
+    const [likesCount, setLikesCount] = useState({})
 
     const getAllUsersPost = async () => {
         const results = await getAllPosts()
         setUsersPost(results)
+
+        results.forEach(async post => {
+            const likes = await getlikesPost(post._id)
+            setLikesCount(prev => ({
+                ...prev,
+                [post._id]: likes.length
+            }))
+        })
     }
 
     useEffect(() => {
@@ -41,8 +50,16 @@ function Feed() {
     const handleLikeToggle = async (postID) => {
         if (unlike[postID]) {
             await dislikePost(postID);
+            setLikesCount(prev => ({
+                ...prev,
+                [postID]: (prev[postID] || 1) - 1
+            }))
         } else {
             await likePost(postID);
+            setLikesCount(prev => ({
+                ...prev,
+                [postID]: (prev[postID] || 0) + 1
+            }))
         }
 
         setUnLike(prev => ({
@@ -58,14 +75,6 @@ function Feed() {
     const handleCloseModalCreatePost = () => {
         setModalCreatePost(false)
     }
-
-    //GETLIKES
-    const getAllLIkes = async (postID) => {
-        const likes = await getlikesPost(postID)
-        setAllLikes(likes)
-    }
-
-    //PROBLEMA, MANDARE A SCHERMO IL NUMERO DEI LIKE DI OGNI POST SOTTOFORMA DI NUMERO
 
     return (
         <>
@@ -217,7 +226,7 @@ function Feed() {
 
                                     <div className="ms-3">
                                         <Card.Title className="my-0 fw-bold fs-5 d-flex align-items-center gap-2">
-                                            {post.author.name} {post.author.surname}
+                                            <Link style={{ textDecoration: 'none', color: 'black' }} to={`/user/${post.author._id}`}>{post.author.name} {post.author.surname}</Link>
                                             {/* Icona piccolo tipo post */}
                                             {post.cover ? (
                                                 <i className="bi bi-image" style={{ color: "#6c757d" }}></i>
@@ -275,27 +284,34 @@ function Feed() {
                                         }}
                                         whileHover={{ filter: "brightness(1)" }}
                                     />
-
-                                    {/* Overlay like/comment sopra immagine */}
-                                    <div className="d-flex justify-content-between align-items-center mt-4 text-muted  mx-3">
-                                        {/* Likes */}
-                                        <div className="d-flex align-items-center gap-3" onClick={() => handleLikeToggle(post._id)} style={{ cursor: "pointer" }}>
-                                            <motion.img
-                                                src={!unlike[post._id] ? "public/icons8-like-32.png" : "public/icons8-like-48.png"}
-                                                alt="like"
-                                                width="32px"
-                                                whileTap={{ scale: 1.4 }}
-                                            />
-                                            <span>{post.likes || 0}</span>
-                                        </div>
-
-                                        {/* Commenti */}
-                                        <div onClick={() => handleOpenModalComment(post)} style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "5px" }}>
-                                            💬 <small>Commenti</small>
-                                        </div>
-                                    </div>
                                 </motion.div>
                             )}
+
+                            {/* Sezione like/commenti — SEMPRE visibile */}
+                            <div className="d-flex justify-content-between align-items-center mt-4 text-muted mx-3">
+                                {/* Likes */}
+                                <div
+                                    className="d-flex align-items-center gap-3"
+                                    onClick={() => handleLikeToggle(post._id)}
+                                    style={{ cursor: "pointer" }}
+                                >
+                                    <motion.img
+                                        src={!unlike[post._id] ? "public/icons8-like-32.png" : "public/icons8-like-48.png"}
+                                        alt="like"
+                                        width="32px"
+                                        whileTap={{ scale: 1.4 }}
+                                    />
+                                    <span>{likesCount[post._id] || 0}</span>
+                                </div>
+
+                                {/* Commenti */}
+                                <div
+                                    onClick={() => handleOpenModalComment(post)}
+                                    style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "5px" }}
+                                >
+                                    💬 <small>Commenti</small>
+                                </div>
+                            </div>
                         </motion.div>
                     ))}
 

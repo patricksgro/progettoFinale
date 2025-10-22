@@ -3,8 +3,12 @@ import Sidebar from "../components/Sidebar"
 import Feed from "../components/Feed"
 import PeopleNearYou from "../components/PeopleNearYou"
 import Chat from "../components/Chat"
+import { useState } from "react"
 
 function Home() {
+
+    const [selectedUserId, setSelectedUserId] = useState(null)
+
     return (
         <Container fluid className="p-0 ">
             <Row>
@@ -22,7 +26,7 @@ function Home() {
                 </Col>
                 {/* CHAT */}
                 <Col>
-                    <Chat />
+                    {/* DA DEFINIRE */}
                 </Col>
             </Row>
         </Container>

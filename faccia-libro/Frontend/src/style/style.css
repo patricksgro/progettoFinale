@@ -72,23 +72,18 @@
 
 .tabs a {
   text-decoration: none;
-  /* Rimuove la sottolineatura */
   color: inherit;
-  /* Mantiene il colore del testo originale */
   font-weight: 500;
   padding-bottom: 6px;
   border-bottom: 3px solid transparent;
-  /* linea invisibile per allineamento */
   transition: border-color 0.3s ease;
 }
 
 .tabs a:hover {
   border-bottom: 3px solid #aaa;
-  /* leggera linea al passaggio */
 }
 
 .tabs a.active {
   border-bottom: 3px solid #007bff;
-  /* linea blu sotto il link attivo */
   color: #007bff;
 }

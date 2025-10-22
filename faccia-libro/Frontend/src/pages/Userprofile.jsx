@@ -1,30 +1,21 @@
-import { Button, Col, Container, Row } from "react-bootstrap"
-import Banner from "../components/Banner"
-import InfoUser from "../components/InfoUser"
+import { Button, Col, Container, Row, Image, Badge } from "react-bootstrap"
 import { NavLink, Outlet, useParams } from "react-router-dom"
 import { useAuthContext } from "../../context/authContext"
 import ProfileOptionsSimple from "../components/ProfileOptionsSimple"
 import { getSingleUser } from "../../data/auth"
 import { useEffect, useState } from "react"
 import { cancelFriendRequest, sendRequest } from "../../data/friendship"
+import { User, Heart, ImageIcon, Users, Send, X, Mail } from "lucide-react"
+import Chat from "../components/Chat"
 
 function UserProfile() {
-
     const [currentUser, setCurrentUser] = useState(null)
     const { id } = useParams()
     const { loggeedUser } = useAuthContext()
-    const [requestSent, setRequestSent] = useState(() => {
-        // Recupera lo stato salvato al caricamento
-        const saved = localStorage.getItem(`friend_request_${id}`)
-        return saved === "true"
-    })
-
-    useEffect(() => {
-        localStorage.setItem(`friend_request_${id}`, requestSent)
-    }, [requestSent, id])
+    const [request, setRequest] = useState(false)
+    const [modalMessages, setModalMessagges] = useState(false)
 
     const isOwner = loggeedUser && loggeedUser._id === id
-
 
     useEffect(() => {
         if (isOwner) {
@@ -34,70 +25,184 @@ function UserProfile() {
         }
     }, [id, loggeedUser, isOwner])
 
-    //RICHIESTE DI AMICIZIA
+    const sendFriendRequest = async () => {
+        await sendRequest(id)
+    }
 
-    const handleFriendRequest = async () => {
-        if (!requestSent) {
-            await sendRequest(id)
-            setRequestSent(true)
-        } else {
-            await cancelFriendRequest(id)
-            setRequestSent(false)
-        }
+    const cancelRequest = async () => {
+        await cancelFriendRequest(id)
+    }
+
+    //MESSAGES
+
+    const handleOpenModalMessages = () => {
+        setModalMessagges(true)
+    }
+
+    const handleCloseModalMessages = () => {
+        setModalMessagges(false)
     }
 
     return (
         <>
-            {
-                loggeedUser &&
-                currentUser &&
-                id &&
-                <Container fluid>
-                    {/* da includere da backend per passare poi dati */}
-                    <Banner />
-                    <div style={{ marginLeft: '8%', marginRight: '8%' }}>
-                        <Row className="justify-content-center">
-                            <Col lg={4} className="text-center">
-                                <InfoUser isOwner={isOwner} currentUser={currentUser} loggeedUser={loggeedUser} id={id} />
+            {loggeedUser && currentUser && id && (
+                <Container
+                    fluid
+                    style={{
+                        background: "linear-gradient(135deg, #f8fafc, #eef2ff)",
+                        padding: "60px 0",
+                        minHeight: "100vh"
+                    }}
+                >
+                    <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+                        {/* BLOCCO SUPERIORE */}
+                        <Row className="align-items-center mb-5">
+                            {/* AVATAR + NOME */}
+                            <Col lg={4} className="text-center mb-4 mb-lg-0">
+                                <div style={{ position: "relative", display: "inline-block" }}>
+                                    <Image
+                                        src={currentUser.avatar}
+                                        roundedCircle
+                                        style={{
+                                            width: "220px",
+                                            height: "220px",
+                                            objectFit: "cover",
+                                            border: "4px solid #fff",
+                                            boxShadow: "0 0 15px rgba(0,0,0,0.1)"
+                                        }}
+                                    />
+                                    <Badge
+                                        bg="success"
+                                        pill
+                                        style={{
+                                            position: "absolute",
+                                            bottom: 5,
+                                            right: 5,
+                                            width: "18px",
+                                            height: "18px",
+                                            border: "2px solid #fff"
+                                        }}
+                                    />
+                                </div>
+
+                                <h2 className="mt-3 mb-1">{currentUser.name} {currentUser.surname}</h2>
+                                <p className="text-muted mb-3 d-flex justify-content-center align-items-center gap-2">
+                                    <Mail size={16} /> {currentUser.email}
+                                </p>
+
+                                {/* Pulsanti */}
+                                <div className="d-flex justify-content-center gap-3 flex-wrap">
+                                    {!isOwner && (
+                                        request ? (
+                                            <Button
+                                                variant="outline-secondary"
+                                                className="d-flex align-items-center gap-2 px-4 py-2 rounded-pill"
+                                                onClick={() => { cancelRequest(); setRequest(false) }}
+                                            >
+                                                <X size={18} /> Cancella richiesta
+                                            </Button>
+                                        ) : (
+                                            <Button
+                                                variant="success"
+                                                className="d-flex align-items-center gap-2 px-4 py-2 rounded-pill"
+                                                style={{
+                                                    background: "linear-gradient(90deg,#22c55e,#16a34a)",
+                                                    border: "none"
+                                                }}
+                                                onClick={() => { sendFriendRequest(); setRequest(true) }}
+                                            >
+                                                <Send size={18} /> Invia richiesta
+                                            </Button>
+                                        )
+                                    )}
+                                </div>
                             </Col>
-                            <Col lg={8} >
-                                <div className="d-flex justify-content-between">
-                                    <div>
-                                        <nav className="tabs my-5">
-                                            <NavLink to="posts" className='fs-4' >Posts</NavLink>
-                                            <NavLink to="friends" className='fs-4' style={{ marginRight: '18%', marginLeft: '18%' }} >Friends</NavLink>
-                                            <NavLink to="galleries" className='fs-4' style={{ marginRight: '18%' }} >Galleries</NavLink>
-                                            <NavLink to="about" className='fs-4' style={{ marginRight: '18%' }}>About</NavLink>
-                                        </nav>
+
+                            {/* BIO + STATISTICHE */}
+                            <Col lg={8}>
+                                <div className="text-center my-4 fs-5 text-secondary fst-italic">
+                                    {currentUser.bio || "Nessuna biografia disponibile."}
+                                </div>
+
+                                <div className="d-flex justify-content-around text-center py-3 border-bottom">
+                                    <div className="d-flex flex-column align-items-center">
+                                        <User size={28} className="text-primary mb-2" />
+                                        <strong>{currentUser.posts?.length || 0}</strong>
+                                        <span className="text-muted">Posts</span>
                                     </div>
-                                    <div className=" d-flex align-items-center">
-                                        <div>
-                                            {
-                                                loggeedUser &&
-                                                isOwner &&
-                                                <ProfileOptionsSimple
-                                                />
-                                            }
-                                        </div>
-                                        <div>
-                                            {!isOwner && (
-                                                <Button
-                                                    onClick={handleFriendRequest}
-                                                    variant={requestSent ? "secondary" : "primary"} // colore diverso
-                                                >
-                                                    {requestSent
-                                                        ? "Richiesta di amicizia inviata"
-                                                        : "Invia richiesta di amicizia"}
-                                                </Button>
-                                            )}
-                                        </div>
+                                    <div className="d-flex flex-column align-items-center">
+                                        <Users size={28} className="text-primary mb-2" />
+                                        <strong>{currentUser.friends?.length || 0}</strong>
+                                        <span className="text-muted">Friends</span>
+                                    </div>
+                                    <div className="d-flex flex-column align-items-center">
+                                        <Heart size={28} className="text-primary mb-2" />
+                                        <strong>{currentUser.likes || 0}</strong>
+                                        <span className="text-muted">Likes</span>
                                     </div>
                                 </div>
-                                <Outlet context={{ currentUser, isOwner }} />
                             </Col>
                         </Row>
+
+                        {/* NAVIGATION TABS */}
+                        <div className="d-flex justify-content-start align-items-center gap-4 mb-4 border-bottom pb-2 flex-wrap">
+                            {[
+                                { key: "posts", icon: <User size={18} />, label: "Posts" },
+                                { key: "friends", icon: <Users size={18} />, label: "Friends" },
+                                { key: "galleries", icon: <ImageIcon size={18} />, label: "Galleries" },
+                                { key: "about", icon: <Heart size={18} />, label: "About" },
+                            ].map(tab => (
+                                <NavLink
+                                    key={tab.key}
+                                    to={tab.key}
+                                    style={({ isActive }) => ({
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "8px",
+                                        fontSize: "1.1rem",
+                                        fontWeight: isActive ? "700" : "500",
+                                        color: isActive ? "#3b82f6" : "#6b7280",
+                                        textDecoration: "none",
+                                        paddingBottom: "6px",
+                                        borderBottom: isActive ? "3px solid #3b82f6" : "3px solid transparent",
+                                        transition: "all 0.3s"
+                                    })}
+                                >
+                                    {tab.icon}
+                                    {tab.label}
+                                </NavLink>
+                            ))}
+                            <div style={{ marginLeft: "auto" }}>
+                                {loggeedUser && isOwner ? <ProfileOptionsSimple /> :
+                                    <Button
+                                        onClick={handleOpenModalMessages}
+                                        variant="success"
+                                        className="d-flex align-items-center gap-2 px-4 py-2 rounded-pill"
+                                        style={{
+                                            background: "linear-gradient(90deg,#22c55e,#16a34a)",
+                                            border: "none"
+                                        }}>Messaggia
+                                    </Button>}
+                            </div>
+                        </div>
+
+                        {/* CONTENUTO PRINCIPALE */}
+                        <div style={{ minHeight: "400px" }}>
+                            <Outlet context={{ currentUser, isOwner }} />
+                        </div>
                     </div>
-                </Container >
+                </Container>
+            )}
+
+            {
+                modalMessages && (
+                    <Chat
+                        loggeedUser={loggeedUser}
+                        recipientId={id}
+                        show={modalMessages}
+                        close={handleCloseModalMessages} />
+                )
+
             }
         </>
     )

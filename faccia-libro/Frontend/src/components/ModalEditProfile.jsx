@@ -41,7 +41,7 @@ function ModalEditProfile({ closeModal, show }) {
         const result = await ediUserProfile(loggeedUser._id, datiForm)
         let finalResult = result
         if (avatar) {
-            const updateAvatarAlso = await editAvatar(loggeedUser._id, avatar)
+            const updateAvatarAlso = await editAvatar( avatar)
             finalResult = updateAvatarAlso
         }
     }

@@ -14,76 +14,74 @@ export async function login(req, res, next) {
             return res.status(400).json({ message: 'Inserisci email e password' })
         }
 
-        const findEmail = await User.findOne({ email }).select('+password')
-        if (!findEmail || !(await findEmail.comparePassword(password))) {
-            return res.status(400).json({ message: 'Email o password errati' });
+        const user = await User.findOne({ email }).select('+password')
+        if (!user || !(await user.comparePassword(password))) {
+            return res.status(400).json({ message: 'Email o password errati' })
         }
 
-        //verifica tentativi otp
-        // const maxOtpPerDay = 10
-        // const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000)
-        // const otpCount = await Otp.countDocuments({
-        //     email,
-        //     createdAt: { $gte: twentyFourHoursAgo }
-        // })
+        // verifica numero massimo OTP per giorno
+        const maxOtpPerDay = 10
+        const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000)
+        const otpCount = await Otp.countDocuments({
+            email,
+            createdAt: { $gte: twentyFourHoursAgo }
+        })
 
-        // if (otpCount >= maxOtpPerDay) {
-        //     return res.status(429).json({
-        //         message: 'Hai raggiunto il numero massimo di OTP richiedibili nelle ultime 24 ore. Riprova più tardi.'
-        //     })
-        // }
+        if (otpCount >= maxOtpPerDay) {
+            return res.status(429).json({
+                message: 'Hai raggiunto il numero massimo di OTP richiedibili nelle ultime 24 ore. Riprova più tardi.'
+            })
+        }
 
+        // genera OTP
+        const otp = generateOTP()
+        const otpDoc = new Otp({
+            email,
+            otp,
+            expiresAt: new Date(Date.now() + 5 * 60 * 1000)
+        })
+        await otpDoc.save()
 
-        // //OTP
-        // const otp = generateOTP()
+        try {
+            await sendOtpEmail(email, otp)
+        } catch (err) {
+            console.error(err)
+        }
 
-        // const otpDoc = new Otp({
-        //     email,
-        //     otp,
-        //     expiresAt: new Date(Date.now() + 5 * 60 * 1000)
-        // })
-        // await otpDoc.save()
-
-        // try {
-        //     await sendOtpEmail(email, otp)
-        // } catch (err) {
-        //     console.error(err)
-        // }
-
-        // res.json({ message: "OTP inviato alla tua email" });
+        // restituisci solo ID OTP temporaneo
+        res.json({ message: "OTP inviato alla tua email", otpId: otpDoc._id })
 
     } catch (err) {
-        // next(err)
         console.error(err)
+        next(err)
     }
-
 }
+
 
 //FUNZIONE VERIFICA OTP DOPO LOGIN
 export async function verifyOTP(req, res, next) {
     try {
+        const { otpId, otp } = req.body
 
-        const { email, otp } = req.body
-
-        const otpDoc = await Otp.findOne({ email, otp })
-        if (!otpDoc || otpDoc.expiresAt < new Date()) {
+        const otpDoc = await Otp.findById(otpId)
+        if (!otpDoc || otpDoc.expiresAt < new Date() || otpDoc.otp !== otp) {
             return res.status(400).json({ message: 'OTP scaduto o non valido' })
         }
 
-        //OTP corretto generi otp
-        const user = await User.findOne({ email })
+        const user = await User.findOne({ email: otpDoc.email })
         if (!user) {
-            return res.status(404).json({ message: 'Email non valida' })
+            return res.status(404).json({ message: 'Utente non trovato' })
         }
+
         const jwt = await signJWT({ id: user._id })
 
-        await otpDoc.deleteOne()
+        await otpDoc.deleteOne()  // elimina OTP usato
 
         return res.status(200).json({ message: 'Login completato', jwt })
 
     } catch (err) {
         console.error(err)
-        // next(err)
+        next(err)
     }
 }
 
@@ -122,12 +120,12 @@ export async function sendOtp(req, res, next) {
 //Registrazione
 export async function register(req, res, next) {
     try {
-        let { name, surname, dateOfBirth, bio, email, avatar, password /*,otp*/ } = req.body
+        let { name, surname, dateOfBirth, bio, email, avatar, password ,otp } = req.body
 
-        // const otpDoc = await Otp.findOne({ email, otp })
-        // if (!otpDoc || otpDoc.expiresAt < new Date()) {
-        //     return res.status(400).json({ message: 'OTP scaduto o non valido' })
-        // }
+        const otpDoc = await Otp.findOne({ email, otp })
+        if (!otpDoc || otpDoc.expiresAt < new Date()) {
+            return res.status(400).json({ message: 'OTP scaduto o non valido' })
+        }
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
@@ -143,7 +141,7 @@ export async function register(req, res, next) {
 
         const savedUser = await newUser.save()
 
-        // await otpDoc.deleteOne();
+        await otpDoc.deleteOne();
 
         const jwt = await signJWT({ id: savedUser._id })
 

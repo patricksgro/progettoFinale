@@ -11,10 +11,16 @@ function Login() {
     const [signupLogin, setSignupLogin] = useState(false)
     const [searchParams] = useSearchParams()
 
-    const [datiFormCredentials, setDatiFormCredentials] = useState({
+    // Step: 1 = inserimento email+password, 2 = inserimento OTP
+    const [step, setStep] = useState(1)
+
+    const [formData, setFormData] = useState({
         email: '',
-        password: ''
+        password: '',
+        otp: ''
     })
+
+    const [otpId, setOtpId] = useState(null)
 
     // login con Google
     const googleLogin = () => {
@@ -27,34 +33,39 @@ function Login() {
         if (token) login(token)
     }, [searchParams])
 
-    // gestisci i cambi nei campi input
     const handleChange = (e) => {
-        setDatiFormCredentials({
-            ...datiFormCredentials,
-            [e.target.name]: e.target.value
-        })
+        setFormData({ ...formData, [e.target.name]: e.target.value })
     }
 
-    // login con email e password
+    // Step 1: login email+password
     const localLogin = async () => {
         try {
             const res = await fetch(import.meta.env.VITE_BASEURL + '/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: datiFormCredentials.email,
-                    password: datiFormCredentials.password
-                })
+                body: JSON.stringify({ email: formData.email, password: formData.password })
             })
-
             const data = await res.json()
+            if (!res.ok) return console.log(data.message)
 
-            if (!res.ok) {
-                console.log(data.message)
-                return
-            }
+            setOtpId(data.otpId)
+            setStep(2) // passa al form OTP
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
-            // token JWT ricevuto → login
+    // Step 2: verifica OTP
+    const verifyOtp = async () => {
+        try {
+            const res = await fetch(import.meta.env.VITE_BASEURL + '/auth/verify-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ otpId, otp: formData.otp })
+            })
+            const data = await res.json()
+            if (!res.ok) return console.log(data.message)
+
             login(data.jwt)
         } catch (err) {
             console.log(err)
@@ -74,36 +85,61 @@ function Login() {
                                         To keep connected with us please login with your personal information by email address and password
                                     </p>
 
-                                    {/* Email */}
-                                    <div className="input-wrapper">
-                                        <i className="bi bi-person input-icon"></i>
-                                        <input
-                                            className="fields"
-                                            type="email"
-                                            name="email"
-                                            placeholder="Enter your email"
-                                            value={datiFormCredentials.email}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
+                                    {step === 1 && (
+                                        <>
+                                            {/* Email */}
+                                            <div className="input-wrapper">
+                                                <i className="bi bi-person input-icon"></i>
+                                                <input
+                                                    className="fields"
+                                                    type="email"
+                                                    name="email"
+                                                    placeholder="Enter your email"
+                                                    value={formData.email}
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
 
-                                    {/* Password */}
-                                    <div className="input-wrapper my-4">
-                                        <i className="bi bi-lock-fill input-icon"></i>
-                                        <input
-                                            className="fields"
-                                            type="password"
-                                            name="password"
-                                            placeholder="Enter your password"
-                                            value={datiFormCredentials.password}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
+                                            {/* Password */}
+                                            <div className="input-wrapper my-4">
+                                                <i className="bi bi-lock-fill input-icon"></i>
+                                                <input
+                                                    className="fields"
+                                                    type="password"
+                                                    name="password"
+                                                    placeholder="Enter your password"
+                                                    value={formData.password}
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
 
-                                    {/* Bottone login */}
-                                    <Button className="color-btn" onClick={localLogin}>
-                                        Login
-                                    </Button>
+                                            {/* Bottone login */}
+                                            <Button className="color-btn" onClick={localLogin}>
+                                                Login
+                                            </Button>
+                                        </>
+                                    )}
+
+                                    {step === 2 && (
+                                        <>
+                                            {/* OTP */}
+                                            <div className="input-wrapper my-4">
+                                                <i className="bi bi-key-fill input-icon"></i>
+                                                <input
+                                                    className="fields"
+                                                    type="text"
+                                                    name="otp"
+                                                    placeholder="Enter OTP"
+                                                    value={formData.otp}
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
+
+                                            <Button className="color-btn" onClick={verifyOtp}>
+                                                Verify OTP
+                                            </Button>
+                                        </>
+                                    )}
 
                                     <p className="card-text my-3">
                                         <small>Or you can join with</small>
@@ -138,13 +174,17 @@ function Login() {
                                             Sign in with Google
                                         </span>
                                     </button>
+                                    {step === 2 && <p className="my-4">Check your email for the OTP.</p>}
+
                                 </div>
 
                                 <div className="my-4 text-center">
                                     <p>
-                                        Don't you have an account?{' '}
+                                        {!signupLogin
+                                            ? "Don't you have an account? "
+                                            : "Do you already have an account? "}
                                         <span className="link" onClick={() => setSignupLogin(!signupLogin)}>
-                                            Signup
+                                            {signupLogin ? 'Login' : 'Signup'}
                                         </span>
                                     </p>
                                 </div>

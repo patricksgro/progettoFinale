@@ -32,7 +32,14 @@ export async function editAvatar(avatar) {
     }
 }
 
-//DELETE USER
+export async function deleteUSer(userID) {
+    try {
+        const response = await axios.delete(`/users/${userID}`)
+        return response.data
+    } catch (err) {
+        console.log(err)
+    }
+}
 
 
 export async function getUsers(search) {
@@ -45,6 +52,18 @@ export async function getUsers(search) {
         console.log(err)
     }
 }
+
+//GET USERS NO PARAMS
+
+export async function getAllUsers() {
+    try {
+        const response = await axios.get(`/users`)
+        return response.data
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 
 export async function getSingleUser(userID) {
     try {

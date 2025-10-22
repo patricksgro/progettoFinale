@@ -53,20 +53,14 @@ function ModalComment({ show, handleClose, post }) {
     const edit = async (commentID) => {
 
         try {
-            const editedComment = await editComment(post._id, commentID, datiFormUpdate)
+            const editedComment = await editComment(post._id, commentID, datiFormUpdate);
 
-            setComments(
-                comments.map((c) => {
-                    console.log(c)
-                    console.log(post)
-                    console.log(c._id === post._id)
-                    return c._id === post._id ? editedComment : c
-                })
-            )
+            setComments(prev =>
+                prev.map((c) => (c._id === commentID ? editedComment : c))
+            );
 
-            console.log(comments.map((c) => (c._id === post._id ? editedComment : c)))
-            setUpdate(null)
-            setDatiFormUpdate({ text: '' })
+            setUpdate(null);
+            setDatiFormUpdate({ text: '' });
         } catch (err) {
             console.log(err)
         }
@@ -172,7 +166,7 @@ function ModalComment({ show, handleClose, post }) {
                                         ) : (
                                             <span>{comment.text}</span>
                                         )}
-                                        <div className="text-muted small mt-1">{comment.author}</div>
+                                        <div className="text-muted small mt-1">{comment.author.name} {comment.author.surname}</div>
                                     </div>
                                     <div className="d-flex gap-2 align-items-center">
                                         {loggeedUser._id === comment.author && (
