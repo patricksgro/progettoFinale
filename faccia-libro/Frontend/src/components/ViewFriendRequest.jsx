@@ -68,17 +68,17 @@ function ViewFriendRequest() {
             {open && (
                 <div
                     style={{
-                        position: "absolute",
-                        top: "40px",
-                        right: 0,
+                        position: "fixed",
+                        top: "70px",
+                        right: "40px",
                         background: "#ffffff",
                         border: "1px solid #e2e8f0",
                         borderRadius: "12px",
-                        boxShadow: "0 4px 16px rgba(0, 0, 0, 0.08)",
+                        boxShadow: "0 4px 16px rgba(0, 0, 0, 0.12)",
                         width: "320px",
                         overflow: "hidden",
                         animation: "fadeIn 0.2s ease",
-                        zIndex: 9999
+                        zIndex: 99999, // sopra tutto
                     }}
                 >
                     {/* 🔹 Header tendina */}

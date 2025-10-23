@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import Signup from './Signup'
 import { useAuthContext } from '../../context/authContext'
 import { useSearchParams } from 'react-router-dom'
-import FooterPages from '../components/FooterPages'
 
 function Login() {
     const { login } = useAuthContext()
@@ -49,7 +48,7 @@ function Login() {
             if (!res.ok) return console.log(data.message)
 
             setOtpId(data.otpId)
-            setStep(2) // passa al form OTP
+            setStep(2)
         } catch (err) {
             console.log(err)
         }
@@ -75,131 +74,228 @@ function Login() {
     return (
         <>
             {!signupLogin ? (
-                <Container fluid className="bg-image d-flex justify-content-center align-items-center vh-100 text-white">
-                    <Row>
-                        <Col>
-                            <div style={{ maxWidth: '108rem' }}>
-                                <div className="card-body">
-                                    <h5 className="card-title fs-1 my-4 fw-bold">Welcome to login system</h5>
-                                    <p className="card-text">
-                                        To keep connected with us please login with your personal information by email address and password
-                                    </p>
-
-                                    {step === 1 && (
-                                        <>
-                                            {/* Email */}
-                                            <div className="input-wrapper">
-                                                <i className="bi bi-person input-icon"></i>
-                                                <input
-                                                    className="fields"
-                                                    type="email"
-                                                    name="email"
-                                                    placeholder="Enter your email"
-                                                    value={formData.email}
-                                                    onChange={handleChange}
-                                                />
-                                            </div>
-
-                                            {/* Password */}
-                                            <div className="input-wrapper my-4">
-                                                <i className="bi bi-lock-fill input-icon"></i>
-                                                <input
-                                                    className="fields"
-                                                    type="password"
-                                                    name="password"
-                                                    placeholder="Enter your password"
-                                                    value={formData.password}
-                                                    onChange={handleChange}
-                                                />
-                                            </div>
-
-                                            {/* Bottone login */}
-                                            <Button className="color-btn" onClick={localLogin}>
-                                                Login
-                                            </Button>
-                                        </>
-                                    )}
-
-                                    {step === 2 && (
-                                        <>
-                                            {/* OTP */}
-                                            <div className="input-wrapper my-4">
-                                                <i className="bi bi-key-fill input-icon"></i>
-                                                <input
-                                                    className="fields"
-                                                    type="text"
-                                                    name="otp"
-                                                    placeholder="Enter OTP"
-                                                    value={formData.otp}
-                                                    onChange={handleChange}
-                                                />
-                                            </div>
-
-                                            <Button className="color-btn" onClick={verifyOtp}>
-                                                Verify OTP
-                                            </Button>
-                                        </>
-                                    )}
-
-                                    <p className="card-text my-3">
-                                        <small>Or you can join with</small>
-                                    </p>
-
-                                    {/* Login con Google */}
-                                    <button
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '8px',
-                                            padding: '8px 16px',
-                                            border: 'none',
-                                            borderRadius: '4px',
-                                            background: 'transparent',
-                                            cursor: 'pointer'
-                                        }}
-                                        onClick={googleLogin}
-                                    >
-                                        <img
-                                            src="https://developers.google.com/identity/images/g-logo.png"
-                                            alt="Google logo"
-                                            style={{ width: '20px', height: '20px' }}
-                                        />
-                                        <span
-                                            style={{
-                                                fontFamily: 'Roboto, sans-serif',
-                                                fontSize: '14px',
-                                                color: '#757575'
-                                            }}
-                                        >
-                                            Sign in with Google
-                                        </span>
-                                    </button>
-                                    {step === 2 && <p className="my-4">Check your email for the OTP.</p>}
-
-                                </div>
-
-                                <div className="my-4 text-center">
-                                    <p>
-                                        {!signupLogin
-                                            ? "Don't you have an account? "
-                                            : "Do you already have an account? "}
-                                        <span className="link" onClick={() => setSignupLogin(!signupLogin)}>
-                                            {signupLogin ? 'Login' : 'Signup'}
-                                        </span>
-                                    </p>
-                                </div>
-                            </div>
+                <Container
+                    fluid
+                    className="d-flex justify-content-center align-items-center min-vh-100 bg-gradient"
+                    style={{
+                        background: "linear-gradient(135deg, #0e2cb3ff 0%, #480a86ff 100%)",
+                    }}
+                >
+                    <Row className="w-100 justify-content-center align-items-center">
+                        {/* SEZIONE SINISTRA - SIGNUP PANEL */}
+                        <Col
+                            md={5}
+                            className="d-flex flex-column justify-content-center align-items-center text-white p-5 rounded-start-5 shadow-lg"
+                            style={{
+                                background: "rgba(3, 117, 211, 0.66)",
+                                backdropFilter: "blur(12px)",
+                                minHeight: "80vh",
+                            }}
+                        >
+                            <h2 className="fw-bold mb-3 text-center">Hello, Friend!</h2>
+                            <p className="text-center mb-4" style={{ maxWidth: "80%" }}>
+                                Enter your personal details and start your journey with us.
+                            </p>
+                            <Button
+                                variant="outline-light"
+                                className="rounded-pill px-4 py-2 fw-semibold"
+                                onClick={() => setSignupLogin(true)}
+                                style={{
+                                    borderWidth: "2px",
+                                    transition: "all 0.3s ease",
+                                }}
+                                onMouseOver={(e) => {
+                                    e.currentTarget.style.background = "#fff";
+                                    e.currentTarget.style.color = "#0072ff";
+                                }}
+                                onMouseOut={(e) => {
+                                    e.currentTarget.style.background = "transparent";
+                                    e.currentTarget.style.color = "#fff";
+                                }}
+                            >
+                                SIGN UP
+                            </Button>
                         </Col>
 
-                        <Col></Col>
-                        <FooterPages />
+                        {/* SEZIONE DESTRA - LOGIN PANEL */}
+                        <Col
+                            xs={11}
+                            md={5}
+                            className="p-5 rounded-end-5 shadow-lg glass-card animate__animated animate__fadeInRight"
+                            style={{
+                                backdropFilter: "blur(16px)",
+                                background: "rgba(255, 255, 255, 0.85)",
+                                border: "1px solid rgba(0, 0, 0, 0.1)",
+                                color: "#222",
+                                minHeight: "80vh",
+                            }}
+                        >
+                            <h1
+                                className="fw-bold mb-3 text-center text-dark"
+                                style={{ letterSpacing: "1px" }}
+                            >
+                                Sign In
+                            </h1>
+                            <p className="text-center mb-4" style={{ color: "#333" }}>
+                                To keep connected with us please login with your personal info.
+                            </p>
+
+                            {/* Step 1: Email + Password */}
+                            {step === 1 && (
+                                <>
+                                    <div className="input-wrapper mb-3">
+                                        <div className="position-relative">
+                                            <i className="bi bi-envelope text-secondary position-absolute top-50 translate-middle-y ms-3"></i>
+                                            <input
+                                                className="form-control ps-5 py-3 rounded-pill bg-transparent border-dark text-dark"
+                                                type="email"
+                                                name="email"
+                                                placeholder="Email"
+                                                value={formData.email}
+                                                onChange={handleChange}
+                                                style={{ backdropFilter: "blur(4px)", transition: "0.3s" }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="input-wrapper mb-4">
+                                        <div className="position-relative">
+                                            <i className="bi bi-lock-fill text-secondary position-absolute top-50 translate-middle-y ms-3"></i>
+                                            <input
+                                                className="form-control ps-5 py-3 rounded-pill bg-transparent border-dark text-dark"
+                                                type="password"
+                                                name="password"
+                                                placeholder="Password"
+                                                value={formData.password}
+                                                onChange={handleChange}
+                                                style={{ backdropFilter: "blur(4px)", transition: "0.3s" }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <Button
+                                        className="w-100 py-3 rounded-pill fw-semibold mt-2"
+                                        onClick={localLogin}
+                                        style={{
+                                            background:
+                                                "linear-gradient(90deg, #00c6ff 0%, #0072ff 100%)",
+                                            border: "none",
+                                            boxShadow: "0 4px 20px rgba(0, 114, 255, 0.4)",
+                                            transition: "transform 0.2s",
+                                        }}
+                                        onMouseOver={(e) =>
+                                            (e.currentTarget.style.transform = "scale(1.03)")
+                                        }
+                                        onMouseOut={(e) =>
+                                            (e.currentTarget.style.transform = "scale(1)")
+                                        }
+                                    >
+                                        Login
+                                    </Button>
+                                </>
+                            )}
+
+                            {/* Step 2: OTP */}
+                            {step === 2 && (
+                                <>
+                                    <div className="input-wrapper mb-4 mt-4">
+                                        <div className="position-relative">
+                                            <i className="bi bi-key-fill text-secondary position-absolute top-50 translate-middle-y ms-3"></i>
+                                            <input
+                                                className="form-control ps-5 py-3 rounded-pill bg-transparent border-dark text-dark"
+                                                type="text"
+                                                name="otp"
+                                                placeholder="Enter OTP"
+                                                value={formData.otp}
+                                                onChange={handleChange}
+                                                style={{ backdropFilter: "blur(4px)", transition: "0.3s" }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <Button
+                                        className="w-100 py-3 rounded-pill fw-semibold mt-2"
+                                        onClick={verifyOtp}
+                                        style={{
+                                            background:
+                                                "linear-gradient(90deg, #00c6ff 0%, #0072ff 100%)",
+                                            border: "none",
+                                            boxShadow: "0 4px 20px rgba(0, 114, 255, 0.4)",
+                                            transition: "transform 0.2s",
+                                        }}
+                                        onMouseOver={(e) =>
+                                            (e.currentTarget.style.transform = "scale(1.03)")
+                                        }
+                                        onMouseOut={(e) =>
+                                            (e.currentTarget.style.transform = "scale(1)")
+                                        }
+                                    >
+                                        Verify OTP
+                                    </Button>
+
+                                    <p className="text-center mt-4" style={{ color: "#333" }}>
+                                        Check your email for the OTP.
+                                    </p>
+                                </>
+                            )}
+
+                            {/* Divider */}
+                            <div className="text-center mt-4">
+                                <small style={{ color: "#333" }}>Or sign in with</small>
+                            </div>
+
+                            {/* Login con Google */}
+                            <button
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    gap: "10px",
+                                    width: "100%",
+                                    marginTop: "15px",
+                                    padding: "10px 16px",
+                                    border: "1px solid #ccc",
+                                    borderRadius: "50px",
+                                    background: "#fff",
+                                    cursor: "pointer",
+                                    fontWeight: "500",
+                                    color: "#222",
+                                    transition: "0.3s",
+                                }}
+                                onMouseOver={(e) => (e.currentTarget.style.background = "#f1f1f1")}
+                                onMouseOut={(e) => (e.currentTarget.style.background = "#fff")}
+                                onClick={googleLogin}
+                            >
+                                <img
+                                    src="https://developers.google.com/identity/images/g-logo.png"
+                                    alt="Google logo"
+                                    style={{ width: "20px", height: "20px" }}
+                                />
+                                <span
+                                    style={{
+                                        fontFamily: "Roboto, sans-serif",
+                                        fontSize: "14px",
+                                    }}
+                                >
+                                    Sign in with Google
+                                </span>
+                            </button>
+
+                            <div className="my-5 text-center">
+                                <p className="text-danger">
+                                    If you signed in for the first time with Google, continue to sign in with Google
+                                </p>
+                            </div>
+                        </Col>
                     </Row>
                 </Container>
             ) : (
                 <Signup />
             )}
         </>
+
     )
+
 }
 
 export default Login

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react"
 import { cancelFriendRequest, sendRequest } from "../../data/friendship"
 import { User, Heart, ImageIcon, Users, Send, X, Mail } from "lucide-react"
 import Chat from "../components/Chat"
+import FooterPages from "../components/FooterPages"
 
 function UserProfile() {
     const [currentUser, setCurrentUser] = useState(null)
@@ -49,8 +50,9 @@ function UserProfile() {
                 <Container
                     fluid
                     style={{
+                        paddingTop: '140px',
                         background: "linear-gradient(135deg, #f8fafc, #eef2ff)",
-                        padding: "60px 0",
+                        paddingBottom: '60px',
                         minHeight: "100vh"
                     }}
                 >
@@ -204,6 +206,7 @@ function UserProfile() {
                 )
 
             }
+            <FooterPages />
         </>
     )
 }

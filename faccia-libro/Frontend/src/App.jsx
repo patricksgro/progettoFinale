@@ -6,7 +6,6 @@ import Signup from "./pages/Signup"
 import { ProtectedRoute } from "../components/ProtectedRoute"
 import Home from "./pages/Home"
 import UserProfile from "./pages/Userprofile"
-import ModalComment from "./components/ModalComment"
 import Posts from "./components/userProfile/Posts"
 import Friends from "./components/userProfile/Friends"
 import Galleries from "./components/userProfile/Galleries"
@@ -43,7 +42,7 @@ function App() {
               </ProtectedRoute>
             }
           >
-            {/* ✅ sottorotte nidificate */}
+            {/* sottorotte nidificate */}
             <Route index element={<Posts />} />
             <Route path="posts" element={<Posts />} />
             <Route path="friends" element={<Friends />} />
