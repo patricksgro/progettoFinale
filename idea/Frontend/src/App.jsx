@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom"
 import { AuthProvider, useAuthContext } from "../context/authContext"
 import Navigation from "./components/Navigation"
 import Login from "./pages/Login"
@@ -11,50 +11,40 @@ import Friends from "./components/userProfile/Friends"
 import Galleries from "./components/userProfile/Galleries"
 import About from "./components/userProfile/About"
 
+// componente per gestire le rotte
+function AppRoutes() {
+  const { loggeedUser } = useAuthContext() // qui il context ESISTE
 
+  return (
+    <Routes>
+      {/* redirect dalla root */}
+      <Route path="/" element={loggeedUser ? <Navigate to="/home" /> : <Navigate to="/login" />} />
+
+      {/* rotte pubbliche */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+
+      {/* rotte private */}
+      <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+
+      {/* rotta profilo */}
+      <Route path="/user/:id" element={<ProtectedRoute><UserProfile /></ProtectedRoute>}>
+        <Route index element={<Posts />} />
+        <Route path="posts" element={<Posts />} />
+        <Route path="friends" element={<Friends />} />
+        <Route path="galleries" element={<Galleries />} />
+        <Route path="about" element={<About />} />
+      </Route>
+    </Routes>
+  )
+}
 
 function App() {
-
-  const {loggeedUser} = useAuthContext()
-
   return (
     <BrowserRouter>
       <AuthProvider>
         <Navigation />
-        <Routes>
-          {/* redirect primo accesso */}
-          <Route path="/" element={loggeedUser ? <Navigate to="/home" /> : <Navigate to="/login" />} />
-
-          {/* rotte pubbliche */}
-          <Route path='/login' element={<Login />} />
-          <Route path='/signup' element={<Signup />} />
-
-
-          {/* rotte private */}
-          <Route path='/home' element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          } />
-
-          {/* rotta principale del profilo */}
-          <Route
-            path="/user/:id"
-            element={
-              <ProtectedRoute>
-                <UserProfile />
-              </ProtectedRoute>
-            }
-          >
-            {/* sottorotte nidificate */}
-            <Route index element={<Posts />} />
-            <Route path="posts" element={<Posts />} />
-            <Route path="friends" element={<Friends />} />
-            <Route path="galleries" element={<Galleries />} />
-            <Route path="about" element={<About />} />
-          </Route>
-
-        </Routes>
+        <AppRoutes /> 
       </AuthProvider>
     </BrowserRouter>
   )
