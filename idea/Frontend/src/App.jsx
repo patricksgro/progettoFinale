@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import { AuthProvider } from "../context/authContext"
+import { AuthProvider, useAuthContext } from "../context/authContext"
 import Navigation from "./components/Navigation"
 import Login from "./pages/Login"
 import Signup from "./pages/Signup"
@@ -15,12 +15,16 @@ import About from "./components/userProfile/About"
 
 function App() {
 
+  const {loggeedUser} = useAuthContext()
 
   return (
     <BrowserRouter>
       <AuthProvider>
         <Navigation />
         <Routes>
+          {/* redirect primo accesso */}
+          <Route path="/" element={loggeedUser ? <Navigate to="/home" /> : <Navigate to="/login" />} />
+
           {/* rotte pubbliche */}
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
