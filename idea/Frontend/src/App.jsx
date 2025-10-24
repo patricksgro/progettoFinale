@@ -13,11 +13,11 @@ import About from "./components/userProfile/About"
 
 // componente per gestire le rotte
 function AppRoutes() {
-  const { loggeedUser } = useAuthContext() // qui il context ESISTE
+  const { loggeedUser } = useAuthContext() 
 
   return (
     <Routes>
-      {/* redirect dalla root */}
+      {/* redirect alla root */}
       <Route path="/" element={loggeedUser ? <Navigate to="/home" /> : <Navigate to="/login" />} />
 
       {/* rotte pubbliche */}
