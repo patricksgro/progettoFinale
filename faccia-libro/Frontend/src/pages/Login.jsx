@@ -9,6 +9,7 @@ function Login() {
     const { login } = useAuthContext()
     const [signupLogin, setSignupLogin] = useState(false)
     const [searchParams] = useSearchParams()
+    const [errorMessage, setErrorMessage] = useState(false)
 
     // Step: 1 = inserimento email+password, 2 = inserimento OTP
     const [step, setStep] = useState(1)
@@ -45,7 +46,12 @@ function Login() {
                 body: JSON.stringify({ email: formData.email, password: formData.password })
             })
             const data = await res.json()
-            if (!res.ok) return console.log(data.message)
+            if (!res.ok) {
+                setErrorMessage(true)
+                console.log(data.message)
+                return
+            }
+
 
             setOtpId(data.otpId)
             setStep(2)
@@ -172,6 +178,10 @@ function Login() {
                                             />
                                         </div>
                                     </div>
+
+                                    {
+                                        errorMessage && <p className='text-danger text-center'>Credenziali errate</p>
+                                    }
 
                                     <Button
                                         className="w-100 py-3 rounded-pill fw-semibold mt-2"

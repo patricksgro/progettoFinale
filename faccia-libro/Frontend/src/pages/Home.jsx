@@ -2,12 +2,10 @@ import { Col, Container, Row } from "react-bootstrap"
 import Sidebar from "../components/Sidebar"
 import Feed from "../components/Feed"
 import PeopleNearYou from "../components/PeopleNearYou"
-import { useState } from "react"
 import FooterPages from '../components/FooterPages'
+import ChatSidebar from "../components/ChatSidebar"
 
 function Home() {
-
-    const [selectedUserId, setSelectedUserId] = useState(null)
 
     return (
         <>
@@ -27,7 +25,7 @@ function Home() {
                     </Col>
                     {/* CHAT */}
                     <Col>
-                        {/* DA DEFINIRE */}
+                        <ChatSidebar />
                     </Col>
                 </Row>
             </Container>

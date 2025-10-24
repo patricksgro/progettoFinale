@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getUsers } from "../../data/auth";
 import { Link } from "react-router-dom";
 import ViewFriendRequest from "./ViewFriendRequest";
+import '../style/style.css'
 
 function Navigation() {
     const { loggeedUser } = useAuthContext();
@@ -57,7 +58,7 @@ function Navigation() {
                     className="fs-2 fw-bold text-primary"
                     style={{ letterSpacing: '1px' }}
                 >
-                    IDEA
+                    <img src="/public/eac5b1a4-523f-446d-9ad4-f12238ba0280.png" alt="logo" width={50} height={50} />
                     
                 </Navbar.Brand>
 
@@ -129,7 +130,7 @@ function Navigation() {
                         <ViewFriendRequest />
 
                         <div className="d-flex align-items-center gap-2">
-                            <span className="fw-semibold">{loggeedUser && `${loggeedUser.name} ${loggeedUser.surname}`}</span>
+                            <span className="fw-semibold responsive-name">{loggeedUser && `${loggeedUser.name} ${loggeedUser.surname}`}</span>
                             <img
                                 src={loggeedUser && `${loggeedUser.avatar}`}
                                 alt="user"

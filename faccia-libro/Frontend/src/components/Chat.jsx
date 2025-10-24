@@ -4,6 +4,7 @@ import axios from "axios";
 import MessageInput from "./MessageInput";
 import { useAuthContext } from "../../context/authContext";
 import { Modal } from "react-bootstrap";
+import { sendMessage } from "../../data/messagges";
 
 function Chat({ recipientId, show, close }) {
     const { token, loggeedUser } = useAuthContext();
@@ -54,13 +55,14 @@ function Chat({ recipientId, show, close }) {
     }, [messages]);
 
     // Invia messaggio
-    const sendMessage = (text) => {
+    const handleSendMessage = async (text) => {
         const msgData = {
             receiverId: recipientId,
-            message: text,
+            text,
         };
 
         socket.emit("send_message", msgData);
+        await sendMessage(msgData.receiverId, { text} )
         setMessages((prev) => [
             ...prev,
             { ...msgData, senderId: loggeedUser._id },
@@ -69,6 +71,9 @@ function Chat({ recipientId, show, close }) {
 
     return (
         <Modal show={show} onHide={close} centered>
+            <Modal.Header>
+                <h2 className="">Live chat</h2>
+            </Modal.Header>
             <Modal.Body
                 style={{
                     backgroundColor: "#f8fafc",
@@ -103,12 +108,12 @@ function Chat({ recipientId, show, close }) {
                                 wordWrap: "break-word",
                             }}
                         >
-                            {msg.message}
+                            {msg.text}
                         </div>
                     ))}
 
                     <div ref={messagesEndRef} />
-                    <MessageInput onSend={sendMessage} />
+                    <MessageInput onSend={handleSendMessage} />
                 </div>
             </Modal.Body>
         </Modal>

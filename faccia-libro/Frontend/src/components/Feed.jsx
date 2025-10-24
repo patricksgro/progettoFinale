@@ -210,18 +210,21 @@ function Feed() {
                                             whileHover={{ scale: 1.08 }}
                                         />
                                         {/* Badge piccolo online */}
-                                        <span
-                                            style={{
-                                                position: "absolute",
-                                                bottom: 0,
-                                                right: 0,
-                                                width: "12px",
-                                                height: "12px",
-                                                borderRadius: "50%",
-                                                background: "#4ade80",
-                                                border: "2px solid #fff",
-                                            }}
-                                        />
+                                        {
+                                            !loggeedUser &&
+                                            <span
+                                                style={{
+                                                    position: "absolute",
+                                                    bottom: 0,
+                                                    right: 0,
+                                                    width: "12px",
+                                                    height: "12px",
+                                                    borderRadius: "50%",
+                                                    background: "#4ade80",
+                                                    border: "2px solid #fff",
+                                                }}
+                                            />
+                                        }
                                     </div>
 
                                     <div className="ms-3">

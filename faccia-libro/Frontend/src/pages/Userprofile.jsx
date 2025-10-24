@@ -4,10 +4,11 @@ import { useAuthContext } from "../../context/authContext"
 import ProfileOptionsSimple from "../components/ProfileOptionsSimple"
 import { getSingleUser } from "../../data/auth"
 import { useEffect, useState } from "react"
-import { cancelFriendRequest, sendRequest } from "../../data/friendship"
-import { User, Heart, ImageIcon, Users, Send, X, Mail } from "lucide-react"
+import { cancelFriendRequest, getFriends, getPendingRequests, sendRequest } from "../../data/friendship"
+import { User, Heart, ImageIcon, Users, Send, X, Mail, Clock } from "lucide-react"
 import Chat from "../components/Chat"
 import FooterPages from "../components/FooterPages"
+import '../style/style.css'
 
 function UserProfile() {
     const [currentUser, setCurrentUser] = useState(null)
@@ -15,6 +16,7 @@ function UserProfile() {
     const { loggeedUser } = useAuthContext()
     const [request, setRequest] = useState(false)
     const [modalMessages, setModalMessagges] = useState(false)
+    const [friendsState, setFriendsState] = useState(null)
 
     const isOwner = loggeedUser && loggeedUser._id === id
 
@@ -25,6 +27,32 @@ function UserProfile() {
             getSingleUser(id).then(user => setCurrentUser(user))
         }
     }, [id, loggeedUser, isOwner])
+
+    //FRIENDSHIP
+
+    useEffect(() => {
+        pendingRequest()
+        getUserFriends()
+    }, [])
+
+    const getUserFriends = async () => {
+        const friends = await getFriends(id)
+        setFriendsState(friends)
+        console.log(friends)
+        console.log(friendsState)
+    }
+
+    const isFriend = friendsState?.some(f =>
+        f.status === "accepted" &&
+        (
+            (f.requester?._id === loggeedUser?._id && f.recipient?._id === id) ||
+            (f.recipient?._id === loggeedUser?._id && f.requester?._id === id)
+        )
+    )
+
+    const pendingRequest = async () => {
+        await getPendingRequests()
+    }
 
     const sendFriendRequest = async () => {
         await sendRequest(id)
@@ -95,7 +123,18 @@ function UserProfile() {
                                 {/* Pulsanti */}
                                 <div className="d-flex justify-content-center gap-3 flex-wrap">
                                     {!isOwner && (
-                                        request ? (
+                                        isFriend ? (
+                                            <Button
+                                                variant="primary"
+                                                className="d-flex align-items-center gap-2 px-4 py-2 rounded-pill"
+                                                style={{
+                                                    background: "linear-gradient(90deg,#22c55e,#16a34a)",
+                                                    border: "none"
+                                                }}
+                                            >
+                                                <Users size={18} /> Amici
+                                            </Button>
+                                        ) : request ? (
                                             <Button
                                                 variant="outline-secondary"
                                                 className="d-flex align-items-center gap-2 px-4 py-2 rounded-pill"
@@ -105,7 +144,6 @@ function UserProfile() {
                                             </Button>
                                         ) : (
                                             <Button
-                                                variant="success"
                                                 className="d-flex align-items-center gap-2 px-4 py-2 rounded-pill"
                                                 style={{
                                                     background: "linear-gradient(90deg,#22c55e,#16a34a)",
@@ -138,9 +176,9 @@ function UserProfile() {
                                         <span className="text-muted">Friends</span>
                                     </div>
                                     <div className="d-flex flex-column align-items-center">
-                                        <Heart size={28} className="text-primary mb-2" />
-                                        <strong>{currentUser.likes || 0}</strong>
-                                        <span className="text-muted">Likes</span>
+                                        <Clock size={28} className="text-primary mb-2" />
+                                        <strong>{new Date(currentUser.createdAt).getFullYear()}</strong>
+                                        <span className="text-muted">Joined</span>
                                     </div>
                                 </div>
                             </Col>

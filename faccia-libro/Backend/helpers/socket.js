@@ -24,12 +24,12 @@ export const initSocket = (server) => {
       return;
     }
 
-    socket.on("send_message", ({ receiverId, message }) => {
-      console.log(`Messaggio da ${socket.userId} a ${receiverId}: ${message}`);
+    socket.on("send_message", ({ receiverId, text }) => {
+      console.log(`Messaggio da ${socket.userId} a ${receiverId}: ${text}`);
       io.to(receiverId).emit("receive_message", {
         senderId: socket.userId,
         receiverId,
-        message,
+        text,
       });
     });
 

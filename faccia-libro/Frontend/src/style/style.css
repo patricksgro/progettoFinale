@@ -78,3 +78,10 @@
   border-bottom: 3px solid #007bff;
   color: #007bff;
 }
+
+
+@media screen and (max-width: 770px) {
+  .responsive-name {
+    display: none!important;
+  }
+}

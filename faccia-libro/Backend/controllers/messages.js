@@ -46,13 +46,13 @@ export async function sendMessage(req, res, next) {
         const { id: receiverId } = req.params
         const senderId = req.user.id
 
-        const user = await User.findById(id)
+        const user = await User.findById(receiverId)
 
         if (!user) {
             return res.status(400).json({ message: " destinatario inesistente" })
         }
 
-        if (!text || !image) {
+        if (!text && !image) {
             return res.status(400).json({ message: 'Il messaggio non può essere vuoto' })
         }
 
