@@ -97,6 +97,10 @@ app.use('/friends', authVerify, friendshipRouter)
 app.use('/likes', authVerify, likeRouter)
 app.use('/messages', authVerify, messageRouter)
 
+app.get("/", (req, res) => {
+    res.send("✅ Backend attivo e funzionante su Render!");
+})
+
 app.use(errorHandler)
 
 connectDB()
