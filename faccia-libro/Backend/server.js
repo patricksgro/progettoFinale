@@ -14,8 +14,7 @@ import googleStrategy from "./helpers/passportConfig.js";
 import friendshipRouter from "./routes/friendship.js";
 import { likeRouter } from "./routes/like.js";
 import messageRouter from "./routes/messages.js";
-import http, { Server } from 'http'
-import { Messages } from "./models/Messages.js";
+import http from 'http'
 import { initSocket } from "./helpers/socket.js";
 
 
