@@ -25,16 +25,20 @@ const server = http.createServer(app)
 initSocket(server)
 //rate-limit globale
 
-var whitelist = [process.env.FRONTEND_HOST]
+var whitelist = [process.env.FRONTEND_HOST, 'https://idea-sable.vercel.app']
+
 var corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
+    origin: function (origin, callback) {
+        if (!origin || whitelist.indexOf(origin) !== -1) {
+            // permette richieste da frontend in whitelist o senza origin
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    },
+    credentials: true 
 }
+
 app.use(cors(corsOptions))
 
 app.use(express.json())
