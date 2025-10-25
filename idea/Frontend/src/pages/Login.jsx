@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Signup from './Signup'
 import { useAuthContext } from '../../context/authContext'
 import { useSearchParams } from 'react-router-dom'
+import {Mail} from 'lucide-react'
 
 function Login() {
     const { login } = useAuthContext()
@@ -210,7 +211,7 @@ function Login() {
                                 <>
                                     <div className="input-wrapper mb-4 mt-4">
                                         <div className="position-relative">
-                                            <i className="bi bi-key-fill text-secondary position-absolute top-50 translate-middle-y ms-3"></i>
+                                            <Mail />
                                             <input
                                                 className="form-control ps-5 py-3 rounded-pill bg-transparent border-dark text-dark"
                                                 type="text"

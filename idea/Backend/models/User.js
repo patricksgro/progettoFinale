@@ -22,7 +22,7 @@ const UserSchema = new Schema({
     },
     avatar: {
         type: String,
-        default: "public/defaultUserImg.jpg"
+        default: "/defaultUserImg.jpg"
     },
     email: {
         type: String,

@@ -58,7 +58,7 @@ function Navigation() {
                     className="fs-2 fw-bold text-primary"
                     style={{ letterSpacing: '1px' }}
                 >
-                    <img src="/public/eac5b1a4-523f-446d-9ad4-f12238ba0280.png" alt="logo" width={50} height={50} />
+                    <img src="/eac5b1a4-523f-446d-9ad4-f12238ba0280.png" alt="logo" width={50} height={50} />
                     
                 </Navbar.Brand>
 
@@ -119,7 +119,7 @@ function Navigation() {
                     !showFullNav &&
                     <div className="d-flex align-items-center gap-4">
                         <img
-                            src="/public/icons8-messages-50.png"
+                            src="/icons8-messages-50.png"
                             alt="messages"
                             width={'30px'}
                             style={{ cursor: 'pointer', transition: 'transform 0.2s ease' }}

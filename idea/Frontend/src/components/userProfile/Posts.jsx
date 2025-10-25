@@ -137,7 +137,7 @@ function Posts() {
                                 <div className="d-flex justify-content-between align-items-center mt-4 text-muted" >
                                     <div className="d-flex align-items-center gap-3" onClick={() => handleLikeToggle(post._id)} style={{ cursor: "pointer" }}>
                                         <motion.img
-                                            src={!unlike[post._id] ? "/public/icons8-like-32.png" : "/public/icons8-like-48.png"}
+                                            src={!unlike[post._id] ? "/icons8-like-32.png" : "/icons8-like-48.png"}
                                             alt="like"
                                             width="32px"
                                             whileTap={{ scale: 1.4 }}
