@@ -33,7 +33,7 @@ function Feed() {
     }
 
     useEffect(() => {
-        getAllUsersPost();
+        getAllUsersPost()
     }, [])
 
     const handleOpenModalComment = (post) => {
@@ -299,7 +299,9 @@ function Feed() {
                                     style={{ cursor: "pointer" }}
                                 >
                                     <motion.img
-                                        src={!unlike[post._id] ? "/icons8-like-32.png" : "/icons8-like-48.png"}
+                                        src={
+                                            !unlike[post._id] ? "/icons8-like-32.png" : "/icons8-like-48.png"
+                                        }
                                         alt="like"
                                         width="32px"
                                         whileTap={{ scale: 1.4 }}

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Signup from './Signup'
 import { useAuthContext } from '../../context/authContext'
 import { useSearchParams } from 'react-router-dom'
-import {Mail} from 'lucide-react'
+import { Mail } from 'lucide-react'
 
 function Login() {
     const { login } = useAuthContext()
@@ -205,6 +205,11 @@ function Login() {
                                     </Button>
                                 </>
                             )}
+
+                            <div className='d-flex flex-column align-items-center mt-3'>
+                                <hr style={{ width: '50%' }} />
+                            </div>
+
 
                             {/* Step 2: OTP */}
                             {step === 2 && (

@@ -36,13 +36,13 @@ function Navigation() {
             className="py-3 shadow-sm"
             style={{
                 ...(!showFullNav && {
-                    backgroundColor: '#ffffffcc', 
+                    backgroundColor: '#ffffffcc',
                     backdropFilter: 'blur(8px)',
                     boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
                     borderRadius: '0 0 25px 25px',
                     transition: 'all 0.3s ease',
                 }),
-                position: 'fixed', 
+                position: 'fixed',
                 top: 0,
                 left: 0,
                 right: 0,
@@ -52,14 +52,33 @@ function Navigation() {
             <Container className="d-flex align-items-center justify-content-between" >
 
                 <Navbar.Brand
-                
                     as={Link}
-                    to={'/home'}
+                    to="/home"
                     className="fs-2 fw-bold text-primary"
-                    style={{ letterSpacing: '1px' }}
+                    style={{
+                        letterSpacing: '1px',
+                        position: 'relative',
+                        width: '180px',
+                        height: '60px',
+
+                    }}
                 >
-                    <img src="/eac5b1a4-523f-446d-9ad4-f12238ba0280.png" alt="logo" width={50} height={50} />
-                    
+                    <img
+                        src="/logoIdea.png"
+                        alt="logo"
+                        style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            transition: 'transform 0.2s ease'
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.transform = 'translate(-50%, -50%) scale(1.2)'}
+                        onMouseLeave={e => e.currentTarget.style.transform = 'translate(-50%, -50%) scale(1)'}
+                    />
                 </Navbar.Brand>
 
                 {

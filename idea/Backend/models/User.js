@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import Post from "./Post.js";
 import bcrypt from 'bcrypt'
+import { Like } from "./Likes.js";
 
 const UserSchema = new Schema({
     name: {
@@ -59,6 +60,8 @@ UserSchema.pre('findOneAndDelete', async function (next) {
     const user = await this.model.findOne(this.getFilter());
     if (user) {
         await Post.deleteMany({ author: user._id });
+
+        await Like.deleteMany({ user: user._id });
     }
     next();
 });
