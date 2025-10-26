@@ -1,5 +1,4 @@
 import { Col, Row } from "react-bootstrap"
-import { useAuthContext } from "../../../context/authContext"
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import ModalComment from "../ModalComment"
@@ -14,7 +13,7 @@ function Posts() {
     const [showModal, setShowModal] = useState(false)
     const [selectedPost, setSelectedPost] = useState(null)
     const [unlike, setUnLike] = useState({})
-    const [likesCount, setLikesCount] = useState({}) // ✅ aggiunto stato per i like
+    const [likesCount, setLikesCount] = useState({}) 
 
     const handleOpenModal = (post) => {
         setSelectedPost(post)
@@ -26,7 +25,7 @@ function Posts() {
         setShowModal(false)
     }
 
-    // ✅ recupera numero like di ogni post
+    //  recupera numero like di ogni post
     useEffect(() => {
         if (currentUser && currentUser.posts.length > 0) {
             currentUser.posts.forEach(async (post) => {

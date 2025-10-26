@@ -20,7 +20,6 @@ function ModalComment({ show, handleClose, post }) {
     })
     const [comments, setComments] = useState(post.comments || [])
 
-
     const handleChange = (e) => {
         setDatiForm({
             ...datiform,
@@ -34,6 +33,7 @@ function ModalComment({ show, handleClose, post }) {
             [e.target.name]: e.target.value
         })
     }
+    console.log(post)
 
     //CREATE COMMENT
     const handleSubmit = async (e) => {

@@ -33,13 +33,11 @@ function UserProfile() {
     useEffect(() => {
         pendingRequest()
         getUserFriends()
-    }, [])
+    }, [id])
 
     const getUserFriends = async () => {
         const friends = await getFriends(id)
         setFriendsState(friends)
-        console.log(friends)
-        console.log(friendsState)
     }
 
     const isFriend = friendsState?.some(f =>
@@ -172,7 +170,7 @@ function UserProfile() {
                                     </div>
                                     <div className="d-flex flex-column align-items-center">
                                         <Users size={28} className="text-primary mb-2" />
-                                        <strong>{currentUser.friends?.length || 0}</strong>
+                                        <strong>{friendsState?.length || 0}</strong>
                                         <span className="text-muted">Friends</span>
                                     </div>
                                     <div className="d-flex flex-column align-items-center">

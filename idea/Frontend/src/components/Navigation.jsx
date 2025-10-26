@@ -1,4 +1,4 @@
-import { Container, Form, FormControl, Navbar } from "react-bootstrap";
+import { Card, Container, Form, FormControl, Navbar } from "react-bootstrap";
 import { useAuthContext } from "../../context/authContext";
 import { useEffect, useState } from "react";
 import { getUsers } from "../../data/auth";
@@ -54,7 +54,7 @@ function Navigation() {
                 <Navbar.Brand
                     as={Link}
                     to="/home"
-                    className="fs-2 fw-bold text-primary"
+                    className="fs-2 fw-bold text-primary responsive-logo-395"
                     style={{
                         letterSpacing: '1px',
                         position: 'relative',
@@ -83,7 +83,7 @@ function Navigation() {
 
                 {
                     !showFullNav &&
-                    <Form className="flex-grow-1 mx-5 position-relative" style={{ maxWidth: "600px" }}>
+                    <Form className="responsive-navigation-768 flex-grow-1 mx-5 position-relative" style={{ maxWidth: "600px" }}>
                         <FormControl
                             type="search"
                             placeholder="Search users..."
@@ -150,26 +150,28 @@ function Navigation() {
 
                         <div className="d-flex align-items-center gap-2">
                             <span className="fw-semibold responsive-name">{loggeedUser && `${loggeedUser.name} ${loggeedUser.surname}`}</span>
-                            <img
-                                src={loggeedUser && `${loggeedUser.avatar}`}
-                                alt="user"
-                                className="rounded-circle"
-                                style={{
-                                    width: "35px",
-                                    height: "35px",
-                                    objectFit: "cover",
-                                    border: '2px solid #dee2e6',
-                                    transition: 'transform 0.2s ease, box-shadow 0.2s ease'
-                                }}
-                                onMouseEnter={e => {
-                                    e.currentTarget.style.transform = 'scale(1.1)';
-                                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
-                                }}
-                                onMouseLeave={e => {
-                                    e.currentTarget.style.transform = 'scale(1)';
-                                    e.currentTarget.style.boxShadow = 'none';
-                                }}
-                            />
+                            
+                                <img
+                                    src={loggeedUser && `${loggeedUser.avatar}`}
+                                    alt="user"
+                                    className="rounded-circle"
+                                    style={{
+                                        width: "35px",
+                                        height: "35px",
+                                        objectFit: "cover",
+                                        border: '2px solid #dee2e6',
+                                        transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+                                    }}
+                                    onMouseEnter={e => {
+                                        e.currentTarget.style.transform = 'scale(1.1)';
+                                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                                    }}
+                                    onMouseLeave={e => {
+                                        e.currentTarget.style.transform = 'scale(1)';
+                                        e.currentTarget.style.boxShadow = 'none';
+                                    }}
+                                />
+                            
                         </div>
                     </div>
                 }

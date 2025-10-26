@@ -3,78 +3,106 @@ import Card from 'react-bootstrap/Card';
 import { getAllPosts } from '../../data/post';
 import ModalComment from './ModalComment';
 import { dislikePost, getlikesPost, likePost } from '../../data/like';
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
 import { useAuthContext } from '../../context/authContext';
 import ModalCreatePost from './ModalCreatePost';
 import { Link } from 'react-router-dom';
 
 function Feed() {
 
-    const { loggeedUser } = useAuthContext()
+    const { loggeedUser } = useAuthContext();
 
-    const [unlike, setUnLike] = useState({})
-    const [showModal, setShowModal] = useState(false)
-    const [modalCreatePost, setModalCreatePost] = useState(false)
-    const [selectedPost, setSelectedPost] = useState(null)
-    const [usersPost, setUsersPost] = useState(null)
-    const [likesCount, setLikesCount] = useState({})
+    const [likedState, setLikedState] = useState({});
+    const [likesCount, setLikesCount] = useState({});
+    const [usersPost, setUsersPost] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [modalCreatePost, setModalCreatePost] = useState(false);
+    const [selectedPost, setSelectedPost] = useState(null);
 
+    //  Ottieni tutti i post e inizializza stato like + conteggio
     const getAllUsersPost = async () => {
-        const results = await getAllPosts()
-        setUsersPost(results)
+        try {
+            const results = await getAllPosts();
+            setUsersPost(results);
 
-        results.forEach(async post => {
-            const likes = await getlikesPost(post._id)
-            setLikesCount(prev => ({
-                ...prev,
-                [post._id]: likes.length
-            }))
-        })
-    }
+            const counts = {};
+            const likedFlags = {};
+
+            if (!loggeedUser) return;
+
+            for (const post of results) {
+                if (!post || !post._id) continue;
+                const likes = await getlikesPost(post._id);
+                counts[post._id] = likes.length;
+
+                // verifica se l'utente loggato è tra chi ha messo like
+                const userLiked = likes.some(like =>
+                    like.user && like.user._id === loggeedUser._id
+                );
+                likedFlags[post._id] = userLiked;
+            }
+
+            setLikesCount(counts);
+            setLikedState(likedFlags);
+
+        } catch (err) {
+            console.error("Errore caricamento post:", err);
+        }
+    };
 
     useEffect(() => {
-        getAllUsersPost()
-    }, [])
+        getAllUsersPost();
+    }, [loggeedUser]);
 
     const handleOpenModalComment = (post) => {
-        setSelectedPost(post)
-        setShowModal(true)
-    }
+        setSelectedPost(post);
+        setShowModal(true);
+    };
 
     const handleCloseModal = () => {
-        setSelectedPost(null)
-        setShowModal(false)
-    }
-
-    //LIKE POST
-    const handleLikeToggle = async (postID) => {
-        if (unlike[postID]) {
-            await dislikePost(postID);
-            setLikesCount(prev => ({
-                ...prev,
-                [postID]: (prev[postID] || 1) - 1
-            }))
-        } else {
-            await likePost(postID);
-            setLikesCount(prev => ({
-                ...prev,
-                [postID]: (prev[postID] || 0) + 1
-            }))
-        }
-
-        setUnLike(prev => ({
-            ...prev,
-            [postID]: !prev[postID]
-        }))
-    }
+        setSelectedPost(null);
+        setShowModal(false);
+    };
 
     const handleOpenModalCreatePost = () => {
-        setModalCreatePost(true)
-    }
+        setModalCreatePost(true);
+    };
 
     const handleCloseModalCreatePost = () => {
-        setModalCreatePost(false)
-    }
+        setModalCreatePost(false);
+    };
+
+    // 🔹 LIKE / UNLIKE POST
+    const handleLikeToggle = async (postID) => {
+        try {
+            const hasLiked = likedState[postID];
+
+            if (hasLiked) {
+                await dislikePost(postID);
+                setLikesCount(prev => ({
+                    ...prev,
+                    [postID]: Math.max((prev[postID] || 1) - 1, 0)
+                }));
+                setLikedState(prev => ({
+                    ...prev,
+                    [postID]: false
+                }));
+            } else {
+                await likePost(postID);
+                setLikesCount(prev => ({
+                    ...prev,
+                    [postID]: (prev[postID] || 0) + 1
+                }));
+                setLikedState(prev => ({
+                    ...prev,
+                    [postID]: true
+                }));
+            }
+
+        } catch (err) {
+            console.error("Errore nel toggle del like:", err);
+        }
+    };
 
     return (
         <>
@@ -88,7 +116,7 @@ function Feed() {
                 style={{
                     maxWidth: "52rem",
                     padding: "20px",
-                    minWidth: "45rem",
+
                     margin: "0 auto",
                     borderRadius: "25px",
                     overflow: "hidden",
@@ -98,7 +126,6 @@ function Feed() {
                 }}
             >
                 <div className="d-flex align-items-center gap-3 mb-3">
-                    {/* Avatar utente loggato */}
                     <motion.img
                         src={loggeedUser && loggeedUser.avatar}
                         alt="User avatar"
@@ -112,8 +139,6 @@ function Feed() {
                         }}
                         whileHover={{ scale: 1.05 }}
                     />
-
-                    {/* Input */}
                     <div
                         onClick={handleOpenModalCreatePost}
                         style={{
@@ -133,10 +158,8 @@ function Feed() {
                     </div>
                 </div>
 
-                {/* Divider */}
                 <hr style={{ borderColor: "#e2e8f0", margin: "0 0 15px 0" }} />
 
-                {/* Azioni “tipo di post” */}
                 <div className="d-flex justify-content-between text-muted px-2">
                     <div className="d-flex align-items-center gap-2" style={{ cursor: "pointer" }}>
                         <i className="bi bi-image" style={{ color: "#22c55e" }}></i>
@@ -153,16 +176,15 @@ function Feed() {
                 </div>
             </motion.div>
 
-            {
-                modalCreatePost && (
-                    <ModalCreatePost
-                        userData={loggeedUser}
-                        show={modalCreatePost}
-                        handleClose={handleCloseModalCreatePost} />
-                )}
+            {modalCreatePost && (
+                <ModalCreatePost
+                    userData={loggeedUser}
+                    show={modalCreatePost}
+                    handleClose={handleCloseModalCreatePost}
+                />
+            )}
 
             {/* FEED POSTS USERS */}
-
             {usersPost &&
                 [...usersPost]
                     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -186,16 +208,9 @@ function Feed() {
                                 border: "1px solid #e2e8f0",
                             }}
                         >
-                            {/* Header post */}
                             <Card.Body className="pb-2">
                                 <div className="d-flex align-items-center mb-3">
-                                    <div
-                                        style={{
-                                            position: "relative",
-                                            width: "55px",
-                                            height: "55px",
-                                        }}
-                                    >
+                                    <div style={{ position: "relative", width: "55px", height: "55px" }}>
                                         <motion.img
                                             src={post.author.avatar}
                                             alt={`${post.author.name} ${post.author.surname}`}
@@ -209,28 +224,13 @@ function Feed() {
                                             }}
                                             whileHover={{ scale: 1.08 }}
                                         />
-                                        {/* Badge piccolo online */}
-                                        {
-                                            !loggeedUser &&
-                                            <span
-                                                style={{
-                                                    position: "absolute",
-                                                    bottom: 0,
-                                                    right: 0,
-                                                    width: "12px",
-                                                    height: "12px",
-                                                    borderRadius: "50%",
-                                                    background: "#4ade80",
-                                                    border: "2px solid #fff",
-                                                }}
-                                            />
-                                        }
                                     </div>
 
                                     <div className="ms-3">
                                         <Card.Title className="my-0 fw-bold fs-5 d-flex align-items-center gap-2">
-                                            <Link style={{ textDecoration: 'none', color: 'black' }} to={`/user/${post.author._id}`}>{post.author.name} {post.author.surname}</Link>
-                                            {/* Icona piccolo tipo post */}
+                                            <Link style={{ textDecoration: 'none', color: 'black' }} to={`/user/${post.author._id}`}>
+                                                {post.author.name} {post.author.surname}
+                                            </Link>
                                             {post.cover ? (
                                                 <i className="bi bi-image" style={{ color: "#6c757d" }}></i>
                                             ) : (
@@ -243,7 +243,6 @@ function Feed() {
                                                 month: "short",
                                                 year: "numeric",
                                             })}
-                                            {/* Icona “nuovo post” se pubblicato nelle ultime 24h */}
                                             {new Date() - new Date(post.createdAt) < 86400000 && (
                                                 <span style={{ color: "#3b82f6", fontSize: "0.85rem", fontWeight: "500" }}>Nuovo!</span>
                                             )}
@@ -251,10 +250,8 @@ function Feed() {
                                     </div>
                                 </div>
 
-                                {/* Divider soft */}
                                 <hr style={{ borderColor: "#e2e8f0", margin: "0 0 10px 0" }} />
 
-                                {/* Testo */}
                                 <Card.Text
                                     className="fs-5 text-secondary"
                                     style={{ lineHeight: "1.7", whiteSpace: "pre-wrap" }}
@@ -263,7 +260,6 @@ function Feed() {
                                 </Card.Text>
                             </Card.Body>
 
-                            {/* Immagine */}
                             {post.cover && (
                                 <motion.div
                                     whileHover={{ scale: 1.03 }}
@@ -290,18 +286,15 @@ function Feed() {
                                 </motion.div>
                             )}
 
-                            {/* Sezione like/commenti — SEMPRE visibile */}
+                            {/* LIKE / COMMENTI */}
                             <div className="d-flex justify-content-between align-items-center mt-4 text-muted mx-3">
-                                {/* Likes */}
                                 <div
                                     className="d-flex align-items-center gap-3"
                                     onClick={() => handleLikeToggle(post._id)}
                                     style={{ cursor: "pointer" }}
                                 >
                                     <motion.img
-                                        src={
-                                            !unlike[post._id] ? "/icons8-like-32.png" : "/icons8-like-48.png"
-                                        }
+                                        src={likedState[post._id] ? "/icons8-like-48.png" : "/icons8-like-32.png"}
                                         alt="like"
                                         width="32px"
                                         whileTap={{ scale: 1.4 }}
@@ -309,7 +302,6 @@ function Feed() {
                                     <span>{likesCount[post._id] || 0}</span>
                                 </div>
 
-                                {/* Commenti */}
                                 <div
                                     onClick={() => handleOpenModalComment(post)}
                                     style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "5px" }}

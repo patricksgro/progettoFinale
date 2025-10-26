@@ -25,7 +25,7 @@ const server = http.createServer(app)
 initSocket(server)
 //rate-limit globale
 
-var whitelist = [process.env.FRONTEND_HOST, 'http://localhost:5173', 'https://idea-b89ch6lgp-patricks-projects-d5a30029.vercel.app']
+var whitelist = [process.env.FRONTEND_HOST, 'https://idea-sable.vercel.app'] 
 
 var corsOptions = {
     origin: function (origin, callback) {

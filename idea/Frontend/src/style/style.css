@@ -80,8 +80,52 @@
 }
 
 
-@media screen and (max-width: 770px) {
+@media screen and (max-width: 991px) {
   .responsive-name {
-    display: none!important;
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .responsive-marginTop-767 {
+    margin-top: 80px !important;
+  }
+}
+
+@media screen and (max-width: 1600px) {
+  .display-none-peopleNearYou-1600 {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 1300px) {
+  .display-none-chatSidebar-1300 {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .responsive-navigation-768 {
+    display: block !important;
+    order: 2;
+    margin-top: 10px;
+  }
+}
+
+@media screen and (max-width: 395px) {
+  .responsive-logo-395 {
+    width: 134px !important;
+  }
+}
+
+@media screen and (max-width: 979px) {
+  .display-none-sidebar-979 {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .marginTop-767 {
+    margin-top: 60px !important;
   }
 }

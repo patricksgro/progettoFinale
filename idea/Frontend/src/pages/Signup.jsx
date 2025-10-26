@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Button, Col, Container, Row } from "react-bootstrap"
 import Login from "./Login"
 import { useAuthContext } from "../../context/authContext"
+import '../style/style.css'
 
 function Signup() {
     const { login } = useAuthContext()
@@ -61,7 +62,7 @@ function Signup() {
             {!signupLogin ? (
                 <Container
                     fluid
-                    className="d-flex justify-content-center align-items-center min-vh-100 bg-gradient"
+                    className="responsive-marginTop-767 d-flex justify-content-center align-items-center min-vh-100 bg-gradient pt-5"
                     style={{
                         background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                     }}

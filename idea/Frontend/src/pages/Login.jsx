@@ -83,7 +83,7 @@ function Login() {
             {!signupLogin ? (
                 <Container
                     fluid
-                    className="d-flex justify-content-center align-items-center min-vh-100 bg-gradient"
+                    className="responsive-marginTop-767 d-flex justify-content-center align-items-center min-vh-100 bg-gradient pt-5"
                     style={{
                         background: "linear-gradient(135deg, #0e2cb3ff 0%, #480a86ff 100%)",
                     }}

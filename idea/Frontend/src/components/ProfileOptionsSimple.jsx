@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"
 
 function ProfileOptionsSimple() {
 
-    const {loggeedUser, logout} = useAuthContext()
+    const { loggeedUser, logout } = useAuthContext()
     const navigate = useNavigate()
 
     const [open, setOpen] = useState(false)
@@ -44,6 +44,13 @@ function ProfileOptionsSimple() {
                         onClick={removeUser}
                     >
                         Delete Profile
+                    </div>
+
+                    <div
+                        style={{ padding: "8px 12px", cursor: "pointer" }}
+                        onClick={logout}
+                    >
+                        Logout
                     </div>
                 </div>
             )}

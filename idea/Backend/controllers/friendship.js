@@ -215,7 +215,7 @@ export async function getFriends(req, res, next) {
                 { requester: id, status: "accepted" },
                 { recipient: id, status: "accepted" }
             ]
-        }).populate("requester recipient", "name email");
+        }).populate("requester recipient", "name surname avatar");
 
         res.json(friends);
     } catch (err) {

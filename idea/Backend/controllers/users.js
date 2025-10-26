@@ -32,7 +32,10 @@ export async function getUser(req, res, next) {
     try {
         const { id } = req.params
 
-        const user = await User.findById(id).populate('posts')
+        const user = await User.findById(id).populate({
+            path: 'posts',
+            populate: { path: 'author' }
+        })
         if (!user) {
             return res.status(404).json({ message: 'Autore non trovato' })
         }

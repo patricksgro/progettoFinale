@@ -3,7 +3,7 @@ import Post from "../models/Post.js";
 
 export async function getAll(req, res, next) {
     try {
-        const post = await Post.findById(req.post._id)        
+        const post = await Post.findById(req.post._id)   
         res.status(200).json(post.comments)
 
     } catch (err) {
