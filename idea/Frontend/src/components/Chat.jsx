@@ -37,7 +37,7 @@ function Chat({ recipientId, show, close }) {
         const fetchMessages = async () => {
             try {
                 const res = await axios.get(
-                    `http://localhost:3000/messages/${recipientId}`,
+                    `https://idea-s74i.onrender.com/messages/${recipientId}`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 setMessages(res.data);
