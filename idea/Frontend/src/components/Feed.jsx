@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { useAuthContext } from '../../context/authContext';
 import ModalCreatePost from './ModalCreatePost';
 import { Link } from 'react-router-dom';
+import '../style/feed.css'
 
 function Feed() {
 
@@ -116,7 +117,6 @@ function Feed() {
                 style={{
                     maxWidth: "52rem",
                     padding: "20px",
-
                     margin: "0 auto",
                     borderRadius: "25px",
                     overflow: "hidden",

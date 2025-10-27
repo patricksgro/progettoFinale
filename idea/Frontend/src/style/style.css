@@ -129,3 +129,39 @@
     margin-top: 60px !important;
   }
 }
+
+
+/* Responsive Navigation Tabs  */
+
+
+@media (max-width: 768px) {
+
+
+  .nav-tabs-responsive {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+
+
+  .nav-tabs-responsive>div:last-child {
+    margin-left: 0 !important;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+
+  .nav-tabs-responsive a {
+    font-size: 1rem !important;
+    gap: 6px !important;
+  }
+}
+
+
+@media (max-width: 1024px) {
+  .nav-tabs-responsive {
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+  }
+}

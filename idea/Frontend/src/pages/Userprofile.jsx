@@ -183,7 +183,7 @@ function UserProfile() {
                         </Row>
 
                         {/* NAVIGATION TABS */}
-                        <div className="d-flex justify-content-start align-items-center gap-4 mb-4 border-bottom pb-2 flex-wrap">
+                        <div className="d-flex justify-content-start align-items-center gap-4 mb-4 border-bottom pb-2 flex-wrap nav-tabs-responsive">
                             {[
                                 { key: "posts", icon: <User size={18} />, label: "Posts" },
                                 { key: "friends", icon: <Users size={18} />, label: "Friends" },
