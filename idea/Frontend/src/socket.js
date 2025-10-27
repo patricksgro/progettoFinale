@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-const socket = io("https://idea-sable.vercel.app", {
+const socket = io("https://idea-s74i.onrender.com/", {
     autoConnect: false,
 });
 
