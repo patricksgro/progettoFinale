@@ -6,7 +6,7 @@ import { useAuthContext } from "../../context/authContext";
 import { Modal } from "react-bootstrap";
 import { sendMessage } from "../../data/messagges";
 
-function Chat({ recipientId, show, close }) {
+function Chat({ recipientId, show, close, currentUser }) {
     const { token, loggeedUser } = useAuthContext();
     const [messages, setMessages] = useState([]);
     const messagesEndRef = useRef(null);
@@ -41,6 +41,7 @@ function Chat({ recipientId, show, close }) {
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 setMessages(res.data);
+                console.log(messages)
             } catch (error) {
                 console.error("Errore caricamento messaggi:", error);
             }
@@ -59,10 +60,11 @@ function Chat({ recipientId, show, close }) {
         const msgData = {
             receiverId: recipientId,
             text,
+            createdAt: new Date().toISOString(),
         };
 
         socket.emit("send_message", msgData);
-        await sendMessage(msgData.receiverId, { text} )
+        await sendMessage(msgData.receiverId, { text })
         setMessages((prev) => [
             ...prev,
             { ...msgData, senderId: loggeedUser._id },
@@ -71,8 +73,15 @@ function Chat({ recipientId, show, close }) {
 
     return (
         <Modal show={show} onHide={close} centered>
+            <button
+                type="button"
+                className="btn-close position-absolute top-0 end-0 m-3"
+                aria-label="Close"
+                onClick={close}
+                style={{ zIndex: 1056 }} // sopra tutto
+            ></button>
             <Modal.Header>
-                <h2 className="">Live chat</h2>
+                <h2 className="">Live chat con {currentUser.name}</h2>
             </Modal.Header>
             <Modal.Body
                 style={{
@@ -109,6 +118,27 @@ function Chat({ recipientId, show, close }) {
                             }}
                         >
                             {msg.text}
+                            {msg.createdAt && (
+                                <div
+                                    style={{
+                                        fontSize: "0.75rem",
+                                        marginTop: "4px",
+                                        opacity: 0.7,
+                                        textAlign:
+                                            msg.senderId === loggeedUser._id ? "right" : "left",
+                                    }}
+                                >
+                                    {new Date(msg.createdAt).toLocaleDateString([], {
+                                        day: "2-digit",
+                                        month: "2-digit",
+                                    })}{" "}
+                                    alle{" "}
+                                    {new Date(msg.createdAt).toLocaleTimeString([], {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                    })}
+                                </div>
+                            )}
                         </div>
                     ))}
 

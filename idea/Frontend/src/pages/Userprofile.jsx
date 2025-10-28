@@ -238,7 +238,8 @@ function UserProfile() {
                         loggeedUser={loggeedUser}
                         recipientId={id}
                         show={modalMessages}
-                        close={handleCloseModalMessages} />
+                        close={handleCloseModalMessages}
+                        currentUser={currentUser} />
                 )
 
             }

@@ -299,7 +299,7 @@ function Feed() {
                                         width="32px"
                                         whileTap={{ scale: 1.4 }}
                                     />
-                                    <span>{likesCount[post._id] || 0}</span>
+                                    <span>{likesCount[post._id]}</span>
                                 </div>
 
                                 <div

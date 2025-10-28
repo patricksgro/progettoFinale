@@ -5,7 +5,7 @@ import User from "../models/User.js"
 export async function getUsers(req, res, next) {
     try {
         const loggedUser = req.user.id
-        const filteredUsers = await User.find({ _id: { $ne: loggedUser } }).select('username avatar')
+        const filteredUsers = await User.find({ _id: { $ne: loggedUser } }).select('name surname avatar')
 
         res.status(200).json(filteredUsers)
     } catch (err) {
@@ -31,7 +31,7 @@ export async function getMessagesWithUser(req, res, next) {
                 { senderId: userId, receiverId: id },
                 { senderId: id, receiverId: userId }
             ]
-        }).sort({ createdAt: 1 })
+        }).sort({ createdAt: 1 }) 
 
         res.status(200).json(messages)
     } catch (err) {

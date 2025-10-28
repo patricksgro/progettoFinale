@@ -82,7 +82,14 @@ function ModalComment({ show, handleClose, post }) {
 
     return (
         <Modal show={show} onHide={handleClose} centered size="lg">
-            <Modal.Header closeButton style={{ borderBottom: "1px solid #e2e8f0", padding: "15px 20px" }}>
+            <button
+                type="button"
+                className="btn-close position-absolute top-0 end-0 m-3"
+                aria-label="Close"
+                onClick={handleClose}
+                style={{ zIndex: 1056 }} // sopra tutto
+            ></button>
+            <Modal.Header >
                 <img
                     src={post.author.avatar}
                     alt={`${post.author.name} ${post.author.surname}`}
