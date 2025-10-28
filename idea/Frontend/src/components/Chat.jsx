@@ -23,7 +23,11 @@ function Chat({ recipientId, show, close, currentUser }) {
                 (msg.senderId === recipientId && msg.receiverId === loggeedUser._id) ||
                 (msg.senderId === loggeedUser._id && msg.receiverId === recipientId)
             ) {
-                setMessages((prev) => [...prev, msg]);
+                const messageWithDate = {
+                    ...msg,
+                    createdAt: msg.createdAt || new Date().toISOString(),
+                };
+                setMessages((prev) => [...prev, messageWithDate]);
             }
         });
 
