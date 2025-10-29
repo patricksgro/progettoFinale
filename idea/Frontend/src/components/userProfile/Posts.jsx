@@ -141,7 +141,7 @@ function Posts() {
                                             width="32px"
                                             whileTap={{ scale: 1.4 }}
                                         />
-                                        {/* ✅ mostra numero like aggiornato */}
+                                        {/* mostra numero like aggiornato */}
                                         <span>{likesCount[post._id] || 0}</span>
                                     </div>
                                     <div style={{ cursor: "pointer" }} onClick={() => handleOpenModal(post)}>

@@ -149,7 +149,7 @@ function Navigation() {
                         <ViewFriendRequest />
 
                         <div className="d-flex align-items-center gap-2">
-                            <span className="fw-semibold responsive-name">{loggeedUser && `${loggeedUser.name} ${loggeedUser.surname}`}</span>
+                            <span className="fw-semibold responsive-name">{loggeedUser && `${loggeedUser.name} ${loggeedUser.surname === null ? '' : loggeedUser.surname}`}</span>
                             
                                 <img
                                     src={loggeedUser && `${loggeedUser.avatar}`}

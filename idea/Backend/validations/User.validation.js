@@ -20,11 +20,10 @@ export const createUserSchema = Joi.object({
         .min(2)
         .max(200)
         .trim()
+        .allow(null)
         .pattern(/^[a-zA-Z0-9àèéìòùÀÈÉÌÒÙ' -]+$/)
         .messages({
             "string.base": "Il cognome deve essere una stringa",
-            "string.empty": "Il cognome è obbligatorio",
-            "any.required": "Il cognome è obbligatorio",
             "string.min": "Il cognome deve avere almeno 2 caratteri",
             "string.max": "Il cognome non può superare i 200 caratteri",
             "string.pattern.base": "Il cognome contiene caratteri non validi"
@@ -39,7 +38,11 @@ export const createUserSchema = Joi.object({
             "any.required": "La data di nascita è obbligatoria"
         }),
     bio: Joi.string()
-        .trim(),
+        .allow(null)    // permette esplicitamente null
+        .optional()     // campo facoltativo, può anche mancare
+        .messages({
+            "string.base": "La bio deve essere una stringa"
+        }),
     avatar: Joi.string()
         .uri()
         .pattern(/\.(jpg|jpeg|png|gif|webp|svg)$/i)

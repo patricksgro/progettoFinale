@@ -6,6 +6,7 @@ import { editAvatar, ediUserProfile } from "../../data/auth"
 function ModalEditProfile({ closeModal, show }) {
 
     const { loggeedUser } = useAuthContext()
+    const [error, setError] = useState(false)
 
     const [avatar, setAvatar] = useState(null)
 
@@ -38,12 +39,23 @@ function ModalEditProfile({ closeModal, show }) {
 
     const handleSubmit = async () => {
 
-        const result = await ediUserProfile(loggeedUser._id, datiForm)
+        let dataSend = { ...datiForm }
+
+        if (dataSend.bio === '') dataSend.bio = null
+        if (dataSend.surname === '') dataSend.surname = null
+        if (dataSend.name === '') {
+            setError(true)
+            return
+        }
+
+        const result = await ediUserProfile(loggeedUser._id, dataSend)
         let finalResult = result
         if (avatar) {
-            const updateAvatarAlso = await editAvatar( avatar)
+            const updateAvatarAlso = await editAvatar(avatar)
             finalResult = updateAvatarAlso
         }
+
+        closeModal()
     }
 
     return (
@@ -138,6 +150,13 @@ function ModalEditProfile({ closeModal, show }) {
                                 onChange={handleChange}
                             />
                         </div>
+
+                        {
+                            error &&
+                            <p className="text-danger mt-3">
+                                Name is required
+                            </p>
+                        }
                     </Modal.Body>
 
                     <Modal.Footer style={{ borderTop: "1px solid #e2e8f0", padding: "15px 20px" }}>
@@ -152,7 +171,6 @@ function ModalEditProfile({ closeModal, show }) {
                             className="btn btn-success"
                             onClick={() => {
                                 handleSubmit();
-                                closeModal()
                             }}
                             style={{ borderRadius: "12px", padding: "8px 18px" }}
                         >

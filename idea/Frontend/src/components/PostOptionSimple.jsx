@@ -23,7 +23,7 @@ function PostOptionsSimple({ post }) {
     return (
         <div style={{ position: "relative", display: "inline-block" }}>
             <img
-                src="public/icons8-menu-48.png"
+                src="/icons8-menu-48.png"
                 alt="options"
                 width={25}
                 style={{ cursor: "pointer" }}
