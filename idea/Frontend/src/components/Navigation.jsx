@@ -149,8 +149,13 @@ function Navigation() {
                         <ViewFriendRequest />
 
                         <div className="d-flex align-items-center gap-2">
-                            <span className="fw-semibold responsive-name">{loggeedUser && `${loggeedUser.name} ${loggeedUser.surname === null ? '' : loggeedUser.surname}`}</span>
-                            
+                            <Link
+                                to={loggeedUser && `/user/${loggeedUser._id}`}
+                                className="d-flex align-items-center gap-2 text-decoration-none"
+                                style={{ color: 'inherit' }}  // ereditare il colore del testo
+                            >
+                                <span className="fw-semibold responsive-name">{loggeedUser && `${loggeedUser.name} ${loggeedUser.surname === null || loggeedUser.surname === undefined ? '' : loggeedUser.surname}`}</span>
+
                                 <img
                                     src={loggeedUser && `${loggeedUser.avatar}`}
                                     alt="user"
@@ -171,7 +176,7 @@ function Navigation() {
                                         e.currentTarget.style.boxShadow = 'none';
                                     }}
                                 />
-                            
+                            </Link>
                         </div>
                     </div>
                 }

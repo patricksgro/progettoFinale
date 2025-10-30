@@ -75,7 +75,7 @@ export async function verifyOTP(req, res, next) {
 
         const jwt = await signJWT({ id: user._id })
 
-        await otpDoc.deleteOne()  // elimina OTP usato
+        await otpDoc.deleteOne()  
 
         return res.status(200).json({ message: 'Login completato', jwt })
 
@@ -120,7 +120,7 @@ export async function sendOtp(req, res, next) {
 //Registrazione
 export async function register(req, res, next) {
     try {
-        let { name, surname, dateOfBirth, bio, email, avatar, password ,otp } = req.body
+        let { name, surname, dateOfBirth, bio, email, avatar, password, otp } = req.body
 
         const otpDoc = await Otp.findOne({ email, otp })
         if (!otpDoc || otpDoc.expiresAt < new Date()) {
@@ -132,7 +132,17 @@ export async function register(req, res, next) {
             return res.status(409).json({ message: "Email già presente" });
         }
 
-        const newUser = new User({ name, surname, dateOfBirth, bio, email, avatar, password })
+        const userData = {};
+        if (name) userData.name = name;
+        if (surname) userData.surname = surname;
+        if (dateOfBirth) userData.dateOfBirth = dateOfBirth;
+        if (bio) userData.bio = bio;
+        if (email) userData.email = email;
+        if (avatar) userData.avatar = avatar;
+        if (password) userData.password = password;
+
+        // crea l'utente con i campi effettivamente presenti
+        const newUser = new User(userData);
 
         const findEmail = await User.findOne({ email })
         if (findEmail) {

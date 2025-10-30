@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { getFriends } from "../../../data/friendship"
 import { useParams } from 'react-router-dom'
-import { Card, Container, Row, Col, Image, Button, CardBody } from "react-bootstrap"
+import { Card, Container, Row, Col, Image, Button } from "react-bootstrap"
 import { motion } from "framer-motion"
 import { UserMinus } from "lucide-react"
 

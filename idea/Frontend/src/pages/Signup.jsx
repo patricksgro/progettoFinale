@@ -44,10 +44,13 @@ function Signup() {
 
     const register = async () => {
         try {
+            const cleanData = Object.fromEntries(
+                Object.entries(formData).filter(([_, value]) => value !== "")
+            )
             const res = await fetch(import.meta.env.VITE_BASEURL + '/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(cleanData)
             })
             const data = await res.json()
             if (!res.ok) return alert(data.message)

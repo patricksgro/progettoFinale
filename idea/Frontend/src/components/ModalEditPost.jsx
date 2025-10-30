@@ -24,6 +24,9 @@ function ModalEditPost({ show, closeModal, post }) {
 
     const handleSubmit = async () => {
 
+        const formData = new FormData()
+        formData.append('description', datiForm.description)
+
         const result = await editPost(post._id, datiForm)
         let finalResult = result
         if (cover) {
@@ -112,6 +115,7 @@ function ModalEditPost({ show, closeModal, post }) {
                             </label>
                             <input
                                 type="file"
+                                id='cover'
                                 accept="image/*"
                                 onChange={handleCoverChange}
                                 style={{ display: "none" }}

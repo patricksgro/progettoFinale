@@ -2,6 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import Post from "./Post.js";
 import bcrypt from 'bcrypt'
 import { Like } from "./Likes.js";
+import { Friendship } from "./Friendship.js";
 
 const UserSchema = new Schema({
     name: {
@@ -62,6 +63,13 @@ UserSchema.pre('findOneAndDelete', async function (next) {
         await Post.deleteMany({ author: user._id });
 
         await Like.deleteMany({ user: user._id });
+
+        await Friendship.deleteMany({
+            $or: [
+                { requester: user._id },
+                { recipient: user._id }
+            ]
+        })
     }
     next();
 });
