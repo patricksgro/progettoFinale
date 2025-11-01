@@ -9,6 +9,15 @@ export async function getMe() {
     }
 }
 
+export async function setPassword(newPassword) {
+    try {
+        const response = await axios.post('/users/set-password', newPassword)
+        return response.data
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 
 export async function ediUserProfile(userID, data) {
     try {

@@ -10,9 +10,9 @@ import { otpLimiter } from '../middlewares/common/otpLimiter.js'
 const authRouter = express.Router()
 
 authRouter.post('/login', sanitizeRequest, login)
-authRouter.post('/verify-otp', verifyOTP)
+authRouter.post('/verify-otp', otpLimiter, verifyOTP)
 
-authRouter.post('/send-otp', sendOtp)
+authRouter.post('/send-otp', otpLimiter, sendOtp)
 authRouter.post('/register', validateEmail, sanitizeRequest, validateRequest(createUserSchema), register)
 
 authRouter.get('/login-google', passport.authenticate('google', { scope: ['profile', 'email'] }))

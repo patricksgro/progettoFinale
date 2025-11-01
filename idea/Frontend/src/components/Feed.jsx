@@ -8,6 +8,7 @@ import { useAuthContext } from '../../context/authContext';
 import ModalCreatePost from './ModalCreatePost';
 import { Link } from 'react-router-dom';
 import '../style/feed.css'
+import AlertChangePAssword from './AlertChangePassword';
 
 function Feed() {
 
@@ -107,7 +108,7 @@ function Feed() {
 
     return (
         <>
-
+            <AlertChangePAssword />
             {/* SEZIONE CREA POST */}
             <motion.div
                 initial={{ opacity: 0, y: -20 }}

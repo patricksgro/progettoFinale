@@ -5,14 +5,25 @@ import { HiOutlinePencilSquare } from 'react-icons/hi2';
 import { useState } from "react";
 import ModalEditProfile from '../../components/ModalEditProfile'
 import { useOutletContext } from "react-router-dom";
+import { Lock } from 'lucide-react';
+import ModalChangePAssword from "../ModalChangePassword";
 
 function About() {
 
     const { currentUser, isOwner } = useOutletContext()
     const [showModal, setShowModal] = useState(false)
+    const [showModalPassword, setShowModalPassword] = useState(false)
 
     const handleOpenModalEditProfile = () => setShowModal(true)
     const handleCloseModalEditProfile = () => setShowModal(false)
+
+    const handleOpenModalChangePassword = () => {
+        setShowModalPassword(true)
+    }
+
+    const handleCloseModalChangePassword = () => {
+        setShowModalPassword(false)
+    }
 
     return (
         <>
@@ -82,6 +93,16 @@ function About() {
                                                     <span className="fw-medium">Joined {new Date(currentUser.createdAt).toLocaleDateString()}</span>
                                                 </li>
                                             </ul>
+                                            <div className="mt-5 ">
+                                                <h5 className="text-primary d-flex align-items-center">
+                                                    <Lock className=" me-3 absolute left-2 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                                                    <button
+                                                        style={{ border: 'none', backgroundColor: 'transparent', color: '#0331ffff' }}
+                                                        onClick={handleOpenModalChangePassword}>
+                                                        Change Password
+                                                    </button>
+                                                </h5>
+                                            </div>
                                         </Col>
                                     </Row>
                                 </Col>
@@ -93,7 +114,13 @@ function About() {
 
             <ModalEditProfile
                 show={showModal}
-                closeModal={handleCloseModalEditProfile} />
+                closeModal={handleCloseModalEditProfile}
+            />
+
+            <ModalChangePAssword
+                show={showModalPassword}
+                handleClose={handleCloseModalChangePassword}
+            />
         </>
     )
 }

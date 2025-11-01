@@ -10,6 +10,34 @@ export async function getMe(req, res, next) {
     }
 }
 
+export async function setPassword(req, res, next) {
+    try {
+        const user = req.user.id
+        const { password } = req.body
+
+        const existingUser = await User.findById(user)
+        if (!existingUser) {
+            return res.status(404).json({ message: 'Utente non trovato' })
+        }
+
+        if (existingUser.password) {
+            return res.status(400).json({ message: 'Una password è già presente' })
+        }
+
+        const lengthPassword = password.length >= 8
+        if (!lengthPassword) {
+            return res.status(400).json({ message: 'La password deve contenere almeno 8 caratteri' })
+        }
+        existingUser.password = password
+        await existingUser.save()
+
+        res.status(200).json({ message: 'Password impostata con successo' })
+
+    } catch (err) {
+        next(err)
+    }
+}
+
 
 export async function getAll(req, res, next) {
     try {

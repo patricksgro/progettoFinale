@@ -1,5 +1,5 @@
 import express from "express"
-import {  deleteUser, editUser, getAll, getMe, getUser, updateAvatar } from "../controllers/users.js"
+import {  deleteUser, editUser, getAll, getMe, getUser, setPassword, updateAvatar } from "../controllers/users.js"
 import { validateObjectId } from "../middlewares/common/validateObjectId.js"
 import { validateRequest } from "../middlewares/common/validateRequest.js"
 import { createUserSchema, updateUserSchema } from "../validations/User.validation.js"
@@ -15,6 +15,8 @@ userRouter.get('/me', getMe)
 userRouter.get('/', validateSearch('search'), getAll)
 
 userRouter.get('/:id', validateObjectId, getUser)
+
+userRouter.post('/set-password', setPassword)
 
 userRouter.put('/:id', validateObjectId, validateEmail, sanitizeRequest, validateRequest(updateUserSchema), editUser)
 
